@@ -1,1 +1,3 @@
 https://www.mariomayhem.com/downloads/sprites/super_mario_bros_sprites.php
+physics:
+  https://web.archive.org/web/20130807122227/http://i276.photobucket.com/albums/kk21/jdaster64/smb_playerphysics.png
