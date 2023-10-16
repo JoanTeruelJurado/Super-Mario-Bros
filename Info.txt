@@ -1,3 +1,11 @@
 https://www.mariomayhem.com/downloads/sprites/super_mario_bros_sprites.php
 physics:
   https://web.archive.org/web/20130807122227/http://i276.photobucket.com/albums/kk21/jdaster64/smb_playerphysics.png
+
+
+----- BUILD-----
+1. Create Build folder v0.0.1
+2. Take assets
+3. Take .exe file
+4. Take .dll
+5. Additional files like Readme
