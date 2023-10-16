@@ -9,3 +9,9 @@ physics:
 3. Take .exe file
 4. Take .dll
 5. Additional files like Readme
+
+to ignore:
+debug directory
+.sdf
+.filters
+
