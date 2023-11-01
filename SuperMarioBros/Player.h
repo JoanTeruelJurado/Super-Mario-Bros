@@ -20,6 +20,7 @@ public:
 	
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
+	glm::ivec2 getPos();
 	
 private:
 	bool bJumping;
@@ -28,6 +29,7 @@ private:
 	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *map;
+	glm::ivec2 mario_size = glm::ivec2(16, 16);
 
 };
 

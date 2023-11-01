@@ -5,12 +5,13 @@
 #include "Game.h"
 
 
-#define SCREEN_X 32
+#define SCREEN_X 244
 #define SCREEN_Y 16
 
-#define INIT_PLAYER_X_TILES 4
-#define INIT_PLAYER_Y_TILES 25
+#define INIT_PLAYER_X_TILES 0
+#define INIT_PLAYER_Y_TILES 0
 
+int scroll;
 
 Scene::Scene()
 {
@@ -29,6 +30,7 @@ Scene::~Scene()
 
 void Scene::init()
 {
+	scroll = 0;
 	initShaders();
 	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player = new Player();
@@ -45,6 +47,10 @@ void Scene::update(int deltaTime)
 	player->update(deltaTime);
 }
 
+int max(int a, int b) {
+	return a > b ? a : b;
+}
+
 void Scene::render()
 {
 	glm::mat4 modelview;
@@ -53,10 +59,13 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("projection", projection);
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	modelview = glm::mat4(1.0f);
+	scroll = max(scroll, (player->getPos().x));
+	modelview = glm::translate(modelview, glm::vec3(-scroll, 0, 0));
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
 	player->render();
+	
 }
 
 void Scene::initShaders()
