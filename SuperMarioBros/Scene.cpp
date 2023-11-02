@@ -30,6 +30,9 @@ Scene::~Scene()
 
 void Scene::init()
 {
+	glClearColor(92.0f / 255.0f, 148.0f / 255.0f, 252.0f / 255.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
 	scroll = 0;
 	initShaders();
 	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
