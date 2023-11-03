@@ -7,13 +7,13 @@
 
 
 #define JUMP_ANGLE_STEP 4
-#define JUMP_HEIGHT 80
+#define JUMP_HEIGHT 50
 #define FALL_STEP 4
 
 
 enum PlayerAnims
 {
-	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, SLIDE_LEFT, SLIDE_RIGHT, JUMP, JUMP_LEFT, JUMP_RIGHT, DEATH
+	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, SLIDE_LEFT, SLIDE_RIGHT, JUMP_LEFT, JUMP_RIGHT, DEATH
 };
 
 
@@ -22,7 +22,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	bJumping = false;
 	spritesheet.loadFromFile("images/small_mario.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(16, 16), glm::vec2(0.0625f, 1.0f), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(10);
+	sprite->setNumberAnimations(9);
 	
 		sprite->setAnimationSpeed(STAND_LEFT, 8);
 		sprite->addKeyframe(STAND_LEFT, glm::vec2(5* 0.0625f, 1.f));
@@ -41,19 +41,19 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(9*0.0625f, 1.f));
 
 		sprite->setAnimationSpeed(SLIDE_LEFT, 8);
-		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 * 0.0625f, 1.f));
+		sprite->addKeyframe(SLIDE_LEFT, glm::vec2(1 * 0.0625f, 1.f));
 
 		sprite->setAnimationSpeed(SLIDE_RIGHT, 8);
-		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(10 * 0.0625f, 1.f));
+		sprite->addKeyframe(SLIDE_RIGHT, glm::vec2(10 * 0.0625f, 1.f));
+
+		sprite->setAnimationSpeed(JUMP_LEFT, 8);
+		sprite->addKeyframe(JUMP_LEFT, glm::vec2(0 * 0.0625f, 1.f));
 
 		sprite->setAnimationSpeed(JUMP_RIGHT, 8);
-		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0 * 0.0625f, 1.f));
-
-		sprite->setAnimationSpeed(JUMP_RIGHT, 8);
-		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(11 * 0.0625f, 1.f));
+		sprite->addKeyframe(JUMP_RIGHT, glm::vec2(11 * 0.0625f, 1.f));
 
 		sprite->setAnimationSpeed(DEATH, 8);
-		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(12 * 0.0625f, 1.f));
+		sprite->addKeyframe(DEATH, glm::vec2(12 * 0.0625f, 1.f));
 
 
 	sprite->changeAnimation(0);
@@ -64,6 +64,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 
 void Player::update(int deltaTime)
 {
+	
 	sprite->update(deltaTime);
 	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 	{
@@ -97,10 +98,14 @@ void Player::update(int deltaTime)
 	
 	if(bJumping)
 	{
+		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT)) sprite->changeAnimation(JUMP_LEFT);
+		else sprite->changeAnimation(JUMP_RIGHT);
+		
 		jumpAngle += JUMP_ANGLE_STEP;
 		if(jumpAngle == 180)
 		{
 			bJumping = false;
+			sprite->changeAnimation(STAND_RIGHT);
 			posPlayer.y = startY;
 		}
 		else

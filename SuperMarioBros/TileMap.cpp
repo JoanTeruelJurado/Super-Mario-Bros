@@ -66,7 +66,7 @@ bool TileMap::loadLevel(const string &levelFile)
 	sstream >> tileSize >> blockSize;
 	getline(fin, line);
 	sstream.str(line);
-	sstream >> tilesheetFile;
+	sstream >> tilesheetFile; //Tilesheet -> image.png
 	tilesheet.loadFromFile(tilesheetFile, TEXTURE_PIXEL_FORMAT_RGBA);
 	tilesheet.setWrapS(GL_CLAMP_TO_EDGE);
 	tilesheet.setWrapT(GL_CLAMP_TO_EDGE);
@@ -83,10 +83,12 @@ bool TileMap::loadLevel(const string &levelFile)
 		for(int i=0; i<mapSize.x; i++)
 		{
 			fin.get(tile);
-			if(tile == ' ')
+			if(tile == '0')
 				map[j*mapSize.x+i] = 0;
-			else
-				map[j*mapSize.x+i] = tile - int('0');
+			else {
+				map[j * mapSize.x + i] = tile - int('0');
+				if (tile == '2') map[j * mapSize.x + i] = 6;
+			}
 		}
 		fin.get(tile);
 #ifndef _WIN32

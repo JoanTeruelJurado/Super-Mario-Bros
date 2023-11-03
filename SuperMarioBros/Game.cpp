@@ -2,7 +2,6 @@
 #include <GL/glut.h>
 #include "Game.h"
 
-
 void Game::init()
 {
 	bPlay = true;
@@ -13,7 +12,6 @@ void Game::init()
 bool Game::update(int deltaTime)
 {
 	scene.update(deltaTime);
-	
 	return bPlay;
 }
 
