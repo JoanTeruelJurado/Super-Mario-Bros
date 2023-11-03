@@ -4,7 +4,7 @@
 
 
 //Remove console (only works in Visual Studio)
-#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
+//#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 
 
 #define TIME_PER_FRAME 1000.f / 60.f // Approx. 60 fps
@@ -79,7 +79,7 @@ static void idleCallback()
 	}
 }
 
-#define GAME_SCALE_FACTOR 1.5
+#define GAME_SCALE_FACTOR 1.0
 
 int main(int argc, char **argv)
 {

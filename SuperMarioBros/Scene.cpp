@@ -5,11 +5,11 @@
 #include "Game.h"
 
 
-#define SCREEN_X 244
+#define SCREEN_X 224
 #define SCREEN_Y 16
 
-#define INIT_PLAYER_X_TILES 0
-#define INIT_PLAYER_Y_TILES 0
+#define INIT_PLAYER_X_TILES 1
+#define INIT_PLAYER_Y_TILES 2
 
 int scroll;
 
@@ -55,6 +55,7 @@ void Scene::init(const int &lv)
 
 void Scene::update(int deltaTime)
 {
+
 	currentTime += deltaTime;
 	if (level != 0) {
 		player->update(deltaTime);
