@@ -6,8 +6,8 @@
 void Game::init()
 {
 	bPlay = true;
-	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-	scene.init();
+	glClearColor(92.0f / 255.0f, 148.0f / 255.0f, 252.0f / 255.0f, 1.0f);
+	scene.init(0);
 }
 
 bool Game::update(int deltaTime)
