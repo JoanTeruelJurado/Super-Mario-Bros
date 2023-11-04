@@ -16,12 +16,16 @@ class Scene
 {
 
 public:
+	bool paused = 0;
+	int level = 1;
+
 	Scene();
 	~Scene();
 
 	void init();
 	void update(int deltaTime);
 	void render();
+	void changeScene(int sceneID);
 
 private:
 	void initShaders();
@@ -32,7 +36,7 @@ private:
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;
-
+	
 };
 
 
