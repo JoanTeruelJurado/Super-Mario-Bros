@@ -64,12 +64,12 @@ int Menu::update(int deltaTime) {
             else if (menu == 1) state = 2;
             else if (menu == 2) state = 33;
         }
-        if (state == 1) {
+        else if (state == 1) {
             if (menu == 0) return 1;
             else if (menu == 1) return 2;
             else if (menu == 2) state = 0;
         }
-        if (state == 2) {
+        else if (state == 2) {
             state = 0;
         }
         menu = 0;
