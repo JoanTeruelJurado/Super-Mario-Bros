@@ -79,7 +79,7 @@ void Scene::render()
 
 	if (level != 0) {
 		scroll = player->getPos().x;
-		modelview = glm::translate(modelview, glm::vec3(-scroll, 0, 0));
+		// modelview = glm::translate(modelview, glm::vec3(-scroll, 0, 0));
 		texProgram.setUniformMatrix4f("modelview", modelview);
 		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 		map->render();
