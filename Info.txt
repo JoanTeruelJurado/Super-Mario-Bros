@@ -15,3 +15,60 @@ debug directory
 .sdf
 .filters
 
+TASKS TODO or DONE:
+1) PART BÀSICA (6 punts)
+Tot exercici haurà de comptar com a mínim amb:
+TODO     Estructura bàsica de 4 pantalles: menú principal, jugar, instruccions,
+crèdits.
+TODO     Dues pantalles del joc. Us podeu inspirar en les que té el joc disponibles o
+fer-ne de noves, però entre totes dues han de contindre totes les
+mecàniques que demanem.
+TODO     Cal tenir dos tipus d’enemics. La seva mecànica ha de ser la mateixa que la
+dels Goombas i els Koopa Troopas. Això implica que en atacar a un Koopa
+Troopa ha de deixar enrere una closca que es pot fer servir per atacar
+altres enemics.
+TODO     Mario ha de poder saltar quan es prem la tecla d’espai i correr quan es
+manté premuda la tecla de Shift.
+TODO     Els totxos dels que es composa cada nivell poden ser destruits pel jugador
+si està en mode Super Mario. Els blocs amb un interrogant contenen o bé
+monedes o power-ups.
+TODO     Cal implementar dos power-ups: el super bolet que permet transformar-se
+en Super Mario i l’estrella que transforma en Star Mario, concedint
+invulnerabilitat, durant un temps determinat.
+TODO     Scroll horitzontal només cap a la dreta.
+TODO     Caure per un forat provoca la mort d’en Mario.
+TODO     El jugador ha de superar cada nivell en un temps límit. Al final de cada
+nivell hi ha una bandera. Quina alçada logra baixar-la el jugador determina
+un bonus de puntuació.
+TODO     Cal portar recompte de la puntuació que s’aconsegueix obtenint monedes,
+acabant amb enemics, etc.
+TODO     Interfície gràfica que mostri la puntuació, nombre de monedes, mon en el
+que ens trobem i temps restant.
+TODO     Tecles per saltar contingut. Aquestes ens facilitaran la correcció, però
+també us serviran per comprovar que les funcionalitats implementades
+funcionen correctament:
+TODO     Transformar en Super Mario (‘M’) i Star Mario (‘G’).
+TODO     Poder saltar a pantalles concretes (tecles numèriques ‘1’, ‘2’).
+2) POLISH (4 punts)
+Cal afegir les següents:
+     So: música de fons i efectes especials.
+     Interactivitat de totes les entitats del joc. Cada esdeveniment que es
+produeix hauria d’anar acompanyat d’una o més animacions. Evitar canvis
+sobtats i fer ús de transicions entre estats. En el cas del Super Mario Bros.,
+com a mínim:
+TODO     Pausa abans de començar.
+TODO     Animació dels blocs amb un interrogant.
+TODO     Animació dels blocs quan són impactats i/o destruits.
+TODO     Animacions de Mario: moure’s, saltar, morir.
+TODO     Animacions dels enemics, tant per moure’s com en morir.
+TODO     Sprites que apareguin a sobre d’en Mario indicant la puntuació
+aconseguida.
+TODO     Efecte per la transformació d’en Mario entre els seus quatre estats
+(Mario, Super Mario i Star Mario).
+TODO     El moviment d’en Mario és accelerat. Això vol dir que Mario no va
+sempre a la mateixa velocitat. Guanya velocitat de forma progressiva
+quan comença a moure’s i la perd quan el jugador vol parar.
+TODO     Animació en arribar a la bandera per finalitzar el nivell.
+TODO     Bonus a la puntuació per temps restant al final del nivell.
+TODO     Game feeling: Com és de propera l'experiència de joc respecte del projecte
+original. Com de polit està el joc quant a diversió i feedback general.
