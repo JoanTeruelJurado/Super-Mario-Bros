@@ -17,7 +17,7 @@ public:
 	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
 	void update(int deltaTime);
 	void render();
-	void ChangeType(int statePlayer, ShaderProgram& shaderProgram);
+	void ChangeType(int statePlayer);
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
 	glm::ivec2 getPos();
@@ -36,6 +36,7 @@ private:
 	glm::ivec2 mario_size = glm::ivec2(16, 16);
 	bool Looking_left = 0;
 	int Mariostate = Small_Mario;
+	ShaderProgram shader;
 };
 
 

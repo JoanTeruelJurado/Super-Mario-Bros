@@ -24,16 +24,17 @@ enum TypePlayer
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	bJumping = false;
-	
-	ChangeType(Small_Mario, shaderProgram);
-
+	shader = shaderProgram;
+	ChangeType(Small_Mario);
+	ChangeType(Medium_Mario);
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	
 }
 
-void Player::ChangeType(int statePlayer, ShaderProgram& shaderProgram){
+void Player::ChangeType(int statePlayer){
+	ShaderProgram& shaderProgram = shader;
 	switch(statePlayer) {
 	case Small_Mario:
 		Mariostate = Small_Mario;
@@ -249,7 +250,11 @@ void Player::ChangeType(int statePlayer, ShaderProgram& shaderProgram){
 
 void Player::update(int deltaTime)
 {
-	//if ((sprite->animation() != DOWN_LEFT) || (sprite->animation() != DOWN_RIGHT) || (Mariostate != Small_Mario)) mario_size = glm::ivec2(16, 32);
+	
+	if (Game::instance().getKey(103)) { ChangeType(Star_Mario); } // KEY pressed G
+	else if (Game::instance().getKey(109)) { ChangeType(Medium_Mario); } // KEY pressed M
+	
+	if (((sprite->animation() != DOWN_LEFT) || (sprite->animation() != DOWN_RIGHT)) && (Mariostate != Small_Mario)) { mario_size = glm::ivec2(16, 32); }
 
 	sprite->update(deltaTime);
 	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT))
@@ -276,8 +281,9 @@ void Player::update(int deltaTime)
 			sprite->changeAnimation(STAND_RIGHT);
 		}
 	}
-	else if((Game::instance().getSpecialKey(GLUT_KEY_DOWN))) {
-		//mario_size = glm::ivec2(16, 16);
+	else if((Game::instance().getSpecialKey(GLUT_KEY_DOWN)) && Mariostate != Small_Mario) {
+		posPlayer.y -= 4;
+		mario_size = glm::ivec2(16, 16);
 
 		if (Looking_left) sprite->changeAnimation(DOWN_LEFT);
 		else sprite->changeAnimation(DOWN_RIGHT);
@@ -310,16 +316,20 @@ void Player::update(int deltaTime)
 	}
 	else
 	{
+
 		posPlayer.y += FALL_STEP;
-		if(map->collisionMoveDown(posPlayer, mario_size, &posPlayer.y))
+		//if (Mariostate != Small_Mario &&((sprite->animation() == DOWN_LEFT) || (sprite->animation() == DOWN_RIGHT))) posPlayer.y += 12;
+
+		if (map->collisionMoveDown(posPlayer, mario_size, &posPlayer.y))
 		{
-			if(Game::instance().getSpecialKey(GLUT_KEY_UP))
+			if (Game::instance().getSpecialKey(GLUT_KEY_UP))
 			{
 				bJumping = true;
 				jumpAngle = 0;
 				startY = posPlayer.y;
 			}
 		}
+		
 	}
 	
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
