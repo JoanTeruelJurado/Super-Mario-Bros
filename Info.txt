@@ -44,11 +44,11 @@ TODO     Cal portar recompte de la puntuació que s’aconsegueix obtenint mo
 acabant amb enemics, etc.
 TODO     Interfície gràfica que mostri la puntuació, nombre de monedes, mon en el
 que ens trobem i temps restant.
-TODO     Tecles per saltar contingut. Aquestes ens facilitaran la correcció, però
+DONE     Tecles per saltar contingut. Aquestes ens facilitaran la correcció, però
 també us serviran per comprovar que les funcionalitats implementades
 funcionen correctament:
 DONE     Transformar en Super Mario (‘M’) i Star Mario (‘G’).
-TODO     Poder saltar a pantalles concretes (tecles numèriques ‘1’, ‘2’).
+DONE     Poder saltar a pantalles concretes (tecles numèriques ‘1’, ‘2’).
 2) POLISH (4 punts)
 Cal afegir les següents:
      So: música de fons i efectes especials.
