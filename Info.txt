@@ -47,7 +47,7 @@ que ens trobem i temps restant.
 TODO     Tecles per saltar contingut. Aquestes ens facilitaran la correcció, però
 també us serviran per comprovar que les funcionalitats implementades
 funcionen correctament:
-TODO     Transformar en Super Mario (‘M’) i Star Mario (‘G’).
+DONE     Transformar en Super Mario (‘M’) i Star Mario (‘G’).
 TODO     Poder saltar a pantalles concretes (tecles numèriques ‘1’, ‘2’).
 2) POLISH (4 punts)
 Cal afegir les següents:
