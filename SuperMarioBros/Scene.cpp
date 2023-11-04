@@ -40,9 +40,15 @@ void Scene::init()
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
-	projection = glm::ortho(0.f, float( SCREEN_WIDTH  - 1), float( SCREEN_HEIGHT - 1), 0.f);
+	//projection = glm::ortho(0.f, float( SCREEN_WIDTH  - 1), float( SCREEN_HEIGHT - 1), 0.f);
 	//projection = glm::ortho(float(SCREEN_WIDTH / 4 - 1), float(3 * SCREEN_WIDTH / 4 - 1), float( 3*SCREEN_HEIGHT/4- 1), float(SCREEN_HEIGHT / 4 - 1));
-	//projection = glm::ortho( 0.f, 290.f, 256.f, 0.f);
+	projection = glm::ortho( 0.f, 300.f, 225.f, 0.f);
+	glm::mat4 modelview;
+	modelview = glm::translate(modelview, glm::vec3(-640, -480, 0));
+	texProgram.setUniformMatrix4f("modelview", modelview);
+	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+	map->render();
+	player->render();
 	currentTime = 0.0f;
 }
 
