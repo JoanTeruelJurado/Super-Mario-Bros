@@ -1,0 +1,18 @@
+﻿  Game.cpp
+C:\Users\joant\OneDrive\Escritorio\SuperMarioBros\SuperMarioBros\Game.cpp(1,10): fatal  error C1083: No se puede abrir el archivo incluir: 'GL/glew.h': No such file or directory
+  main.cpp
+C:\Users\joant\OneDrive\Escritorio\SuperMarioBros\SuperMarioBros\main.cpp(1,10): fatal  error C1083: No se puede abrir el archivo incluir: 'GL/glew.h': No such file or directory
+  Player.cpp
+C:\Users\joant\OneDrive\Escritorio\SuperMarioBros\SuperMarioBros\Player.cpp(3,10): fatal  error C1083: No se puede abrir el archivo incluir: 'GL/glew.h': No such file or directory
+  Scene.cpp
+C:\Users\joant\OneDrive\Escritorio\SuperMarioBros\SuperMarioBros\Scene.cpp(3,10): fatal  error C1083: No se puede abrir el archivo incluir: 'glm/gtc/matrix_transform.hpp': No such file or directory
+  Shader.cpp
+C:\Users\joant\OneDrive\Escritorio\SuperMarioBros\SuperMarioBros\Shader.h(6,10): fatal  error C1083: No se puede abrir el archivo incluir: 'GL/glew.h': No such file or directory
+  ShaderProgram.cpp
+C:\Users\joant\OneDrive\Escritorio\SuperMarioBros\SuperMarioBros\ShaderProgram.cpp(1,10): fatal  error C1083: No se puede abrir el archivo incluir: 'glm/gtc/type_ptr.hpp': No such file or directory
+  Sprite.cpp
+C:\Users\joant\OneDrive\Escritorio\SuperMarioBros\SuperMarioBros\Sprite.cpp(1,10): fatal  error C1083: No se puede abrir el archivo incluir: 'GL/glew.h': No such file or directory
+  Texture.cpp
+C:\Users\joant\OneDrive\Escritorio\SuperMarioBros\SuperMarioBros\Texture.cpp(1,10): fatal  error C1083: No se puede abrir el archivo incluir: 'SOIL.h': No such file or directory
+  TileMap.cpp
+C:\Users\joant\OneDrive\Escritorio\SuperMarioBros\SuperMarioBros\TileMap.h(5,10): fatal  error C1083: No se puede abrir el archivo incluir: 'glm/glm.hpp': No such file or directory
