@@ -2,7 +2,7 @@
 #include <GL/gl.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Sprite.h"
-
+#include <iostream>
 
 Sprite *Sprite::createSprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Texture *spritesheet, ShaderProgram *program)
 {
@@ -36,15 +36,19 @@ Sprite::Sprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Te
 
 void Sprite::update(int deltaTime)
 {
+	//std::cout << "hi: " << currentAnimation << endl;
 	if(currentAnimation >= 0)
 	{
 		timeAnimation += deltaTime;
+		//std::cout << "<---><<" << timeAnimation << " " << animations[currentAnimation].millisecsPerKeyframe << endl;
 		while(timeAnimation > animations[currentAnimation].millisecsPerKeyframe)
 		{
 			timeAnimation -= animations[currentAnimation].millisecsPerKeyframe;
 			currentKeyframe = (currentKeyframe + 1) % animations[currentAnimation].keyframeDispl.size();
+			//std::cout << "---" << currentAnimation << " " << currentKeyframe << " as " << animations[currentAnimation].keyframeDispl.size() << endl;
 		}
 		texCoordDispl = animations[currentAnimation].keyframeDispl[currentKeyframe];
+		
 	}
 }
 
@@ -90,12 +94,14 @@ void Sprite::addKeyframe(int animId, const glm::vec2 &displacement)
 
 void Sprite::changeAnimation(int animId)
 {
+
 	if(animId < int(animations.size()))
 	{
 		currentAnimation = animId;
-		currentKeyframe = 0;
+		currentKeyframe = (currentKeyframe+1) % animations[animId].keyframeDispl.size();
 		timeAnimation = 0.f;
-		texCoordDispl = animations[animId].keyframeDispl[0];
+		texCoordDispl = animations[animId].keyframeDispl[currentKeyframe];
+
 	}
 }
 

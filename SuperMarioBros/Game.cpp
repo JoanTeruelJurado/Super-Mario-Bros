@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include "Game.h"
+#include <iostream>
 
 void Game::init()
 {
@@ -21,13 +22,20 @@ void Game::render()
 	scene.render();
 }
 
+using namespace std;
 void Game::keyPressed(int key)
 {
+
+	if (key == 49) scene.changeScene(1); // '1' key
+	if (key == 50) scene.changeScene(2); // '2' key
+	if (key == 112 || key==80) { scene.paused = !(scene.paused);} // P key
 	if(key == 27) // Escape code
 		bPlay = false;
 	keys[key] = true;
 }
-
+//#include <windows.h>
+//#include <mmsystem.h>
+// bool pl = PlaySound(L"sounds/smb_gameover.wav", NULL, SND_SYNC);  para la musica
 void Game::keyReleased(int key)
 {
 	keys[key] = false;
