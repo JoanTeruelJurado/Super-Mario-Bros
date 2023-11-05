@@ -47,8 +47,7 @@ void Scene::init(const int &lv)
 		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 		player->setTileMap(map);
-		//projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
-		projection = glm::ortho(224.f, 524.f, 250.f, 25.f); //300 225
+		projection = glm::ortho(225.f, float(SCREEN_WIDTH - 100), float(SCREEN_HEIGHT - 250), 0.f);
 		currentTime = 0.0f;
 	}
 }
@@ -80,7 +79,7 @@ void Scene::render()
 
 	if (level != 0) {
 		scroll = player->getPos().x;
-		//modelview = glm::translate(modelview, glm::vec3(-scroll, 0, 0));
+		// modelview = glm::translate(modelview, glm::vec3(-scroll, 0, 0));
 		texProgram.setUniformMatrix4f("modelview", modelview);
 		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 		map->render();

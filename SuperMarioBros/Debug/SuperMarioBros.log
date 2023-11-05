@@ -1,2 +1,5 @@
-﻿  Sprite.cpp
-  SuperMarioBros.vcxproj -> C:\Users\joant\OneDrive\Escritorio\SuperMarioBros\SuperMarioBros\Debug\SuperMarioBros.exe
+﻿  Player.cpp
+C:\Users\eric_\Documents\GitHub\Super-Mario-Bros\SuperMarioBros\Player.cpp(174,66): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
+  Scene.cpp
+  Generando código...
+  SuperMarioBros.vcxproj -> C:\Users\eric_\Documents\GitHub\Super-Mario-Bros\SuperMarioBros\Debug\SuperMarioBros.exe
