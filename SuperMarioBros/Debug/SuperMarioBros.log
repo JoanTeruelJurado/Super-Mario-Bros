@@ -1,5 +1,29 @@
-﻿  Player.cpp
-C:\Users\eric_\Documents\GitHub\Super-Mario-Bros\SuperMarioBros\Player.cpp(174,66): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
+﻿  Game.cpp
+  Goomba.cpp
+  main.cpp
+C:\Users\eric_\Documents\GitHub\Super-Mario-Bros\SuperMarioBros\main.cpp(90,66): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
+C:\Users\eric_\Documents\GitHub\Super-Mario-Bros\SuperMarioBros\main.cpp(90,33): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
+  Menu.cpp
+C:\Users\eric_\Documents\GitHub\Super-Mario-Bros\SuperMarioBros\Menu.cpp(46,41): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+  Player.cpp
+C:\Users\eric_\Documents\GitHub\Super-Mario-Bros\SuperMarioBros\Player.cpp(351,26): warning C4244: '+=': conversión de 'T' a 'T'; posible pérdida de datos
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
   Scene.cpp
+  Shader.cpp
+  ShaderProgram.cpp
+  Sprite.cpp
+  Texture.cpp
+  TileMap.cpp
   Generando código...
+SOIL.lib(image_DXT.obj) : warning LNK4099: no se encontró PDB '' con 'SOIL.lib(image_DXT.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
+SOIL.lib(image_helper.obj) : warning LNK4099: no se encontró PDB '' con 'SOIL.lib(image_helper.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
+SOIL.lib(SOIL.obj) : warning LNK4099: no se encontró PDB '' con 'SOIL.lib(SOIL.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
+SOIL.lib(stb_image_aug.obj) : warning LNK4099: no se encontró PDB '' con 'SOIL.lib(stb_image_aug.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
   SuperMarioBros.vcxproj -> C:\Users\eric_\Documents\GitHub\Super-Mario-Bros\SuperMarioBros\Debug\SuperMarioBros.exe
