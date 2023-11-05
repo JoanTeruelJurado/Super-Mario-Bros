@@ -17,12 +17,16 @@ class Scene
 {
 
 public:
+	bool paused = 0;
+	//int level = 1;
+
 	Scene();
 	~Scene();
 
 	void init(const int &lv);
 	void update(int deltaTime);
 	void render();
+	void changeScene(int sceneID);
 
 private:
 	void initShaders();
