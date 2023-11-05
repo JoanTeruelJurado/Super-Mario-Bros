@@ -17,6 +17,7 @@ Scene::Scene()
 {
 	map = NULL;
 	player = NULL;
+	goomba = NULL;
 	menu = NULL;
 }
 
@@ -26,6 +27,8 @@ Scene::~Scene()
 		delete map;
 	if(player != NULL)
 		delete player;
+	if (goomba != NULL)
+		delete goomba;
 	if (menu != NULL)
 		delete menu;
 }
@@ -48,6 +51,10 @@ void Scene::init(const int &lv)
 		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 		player->setTileMap(map);
+		goomba = new Goomba();
+		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		goomba->setPosition(glm::vec2((INIT_PLAYER_X_TILES + 15) * map->getTileSize(), (INIT_PLAYER_Y_TILES + 9) * map->getTileSize()));
+		goomba->setTileMap(map);
 		projection = glm::ortho(225.f, float(SCREEN_WIDTH - 100), float(SCREEN_HEIGHT - 250), 0.f);
 		currentTime = 0.0f;
 	}
@@ -55,10 +62,13 @@ void Scene::init(const int &lv)
 
 void Scene::update(int deltaTime)
 {
-
 	currentTime += deltaTime;
 	if (level != 0) {
+		if (isKill(player->getPos(), goomba->getPosition())) {
+			goomba->setKill();
+		}
 		player->update(deltaTime);
+		goomba->update(deltaTime);
 	}
 	else {
 		level = menu->update(deltaTime);
@@ -84,6 +94,7 @@ void Scene::render()
 		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 		map->render();
 		player->render();
+		goomba->render();
 	}
 	else {
 		texProgram.setUniformMatrix4f("modelview", modelview);
@@ -123,5 +134,17 @@ void Scene::initShaders()
 	fShader.free();
 }
 
+bool Scene::isKill(glm::vec2 posPlayer, glm::vec2 posEnemy) {
+	float leftP = posPlayer.x;
+	float rightP = posPlayer.x + 16;
+	float bottomP = posPlayer.y;
+
+	float leftE = posEnemy.x;
+	float rightE = posEnemy.x + 16;
+	float topE = posEnemy.y - 16;
+
+	if ((bottomP - 2 >= topE && bottomP <= topE + 2) && (leftP < rightE && rightP > leftE)) return true;
+	return false;
+}
 
 

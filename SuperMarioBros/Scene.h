@@ -6,6 +6,7 @@
 #include "ShaderProgram.h"
 #include "TileMap.h"
 #include "Player.h"
+#include "Goomba.h"
 #include "Menu.h"
 
 
@@ -26,10 +27,12 @@ public:
 
 private:
 	void initShaders();
+	bool isKill(glm::vec2 posPlayer, glm::vec2 posEnemy);
 
 private:
 	TileMap *map;
 	Player *player;
+	Goomba *goomba;
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;
