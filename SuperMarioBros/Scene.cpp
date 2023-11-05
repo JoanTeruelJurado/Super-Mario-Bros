@@ -4,6 +4,8 @@
 #include "Scene.h"
 #include "Game.h"
 
+#include <windows.h>
+#include <mmsystem.h>
 
 #define SCREEN_X 224
 #define SCREEN_Y 16
@@ -38,6 +40,7 @@ void Scene::init(const int &lv)
 		menu = new Menu();
 		menu->init(texProgram);
 		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+		PlaySound(L"sounds/01.-Ground-Theme.wav", NULL, SND_ASYNC|SND_LOOP);
 	}
 	else {
 		initShaders();
@@ -80,6 +83,8 @@ void Scene::render()
 	if (level != 0) {
 		scroll = player->getPos().x;
 		// modelview = glm::translate(modelview, glm::vec3(-scroll, 0, 0));
+		//modelview = glm::translate(modelview, glm::vec3(-(float(player->gettileMapDispl().x + player->getPos().x)), 0, 0));
+		
 		texProgram.setUniformMatrix4f("modelview", modelview);
 		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 		map->render();

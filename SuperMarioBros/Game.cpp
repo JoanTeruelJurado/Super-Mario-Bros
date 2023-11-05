@@ -21,20 +21,21 @@ void Game::render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	scene.render();
 }
-#include <windows.h>
-#include <mmsystem.h>
+
 using namespace std;
 void Game::keyPressed(int key)
 {
 
 	if (key == 49) scene.changeScene(1); // '1' key
 	if (key == 50) scene.changeScene(2); // '2' key
-	if (key == 112 || key==80) { scene.paused = !(scene.paused); bool pl = PlaySound(L"sounds/smb_gameover.wav", NULL, SND_ASYNC); } // P key
+	if (key == 112 || key==80) { scene.paused = !(scene.paused);} // P key
 	if(key == 27) // Escape code
 		bPlay = false;
 	keys[key] = true;
 }
-
+//#include <windows.h>
+//#include <mmsystem.h>
+// bool pl = PlaySound(L"sounds/smb_gameover.wav", NULL, SND_SYNC);  para la musica
 void Game::keyReleased(int key)
 {
 	keys[key] = false;

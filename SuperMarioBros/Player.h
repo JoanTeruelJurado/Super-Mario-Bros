@@ -21,14 +21,18 @@ public:
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
 	glm::ivec2 getPos();
-	
+	glm::ivec2 gettileMapDispl();
+	int getcoins();
+	int getlives();
+	int getscore();
 
 	enum TypePlayer {
 		Small_Mario, Star_Mario, Fire_Mario, Medium_Mario
 	};
 private:
 	bool bJumping;
-	glm::ivec2 tileMapDispl, posPlayer, velPlayer, accPlayer;
+	glm::ivec2 tileMapDispl = glm::ivec2(0,0), posPlayer;
+	glm::fvec2 velPlayer;
 	int jumpAngle, startY;
 	Texture spritesheet;
 	Sprite *sprite;
@@ -37,6 +41,12 @@ private:
 	bool Looking_left = 0;
 	int Mariostate = Small_Mario;
 	ShaderProgram shader;
+	float acceleration = 0.0625; // 1/16 of a pixel
+
+
+	int coins  = 0;
+	int lives = 3;
+	int score = 0;
 };
 
 

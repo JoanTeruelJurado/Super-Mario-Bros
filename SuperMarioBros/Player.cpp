@@ -5,11 +5,14 @@
 #include "Player.h"
 #include "Game.h"
 
+#include <windows.h>
+#include <mmsystem.h>
+// bool pl = PlaySound(L"sounds/smb_gameover.wav", NULL, SND_SYNC);  para la musica
 
 #define JUMP_ANGLE_STEP 4
 #define JUMP_HEIGHT 50
 #define FALL_STEP 4
-
+#define max_speed 4.5f/2.0f
 
 enum PlayerAnims
 {
@@ -23,10 +26,10 @@ enum TypePlayer
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
+	velPlayer = glm::fvec2(0.f, 0.f);
 	bJumping = false;
 	shader = shaderProgram;
 	ChangeType(Small_Mario);
-	ChangeType(Star_Mario);
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -250,8 +253,10 @@ void Player::ChangeType(int statePlayer){
 
 void Player::update(int deltaTime)
 {
-	if (Game::instance().getKey(103) || Game::instance().getKey(71)) { ChangeType(Star_Mario); } // KEY pressed G
-	else if (Game::instance().getKey(109) || Game::instance().getKey(77)) { ChangeType(Medium_Mario); } // KEY pressed M
+	
+
+	if (Game::instance().getKey(103) || Game::instance().getKey(71)) { if (Mariostate == Small_Mario) posPlayer.y -=16; ChangeType(Star_Mario); } // KEY pressed G
+	else if (Game::instance().getKey(109) || Game::instance().getKey(77)) { if (Mariostate == Small_Mario) posPlayer.y -= 16; ChangeType(Medium_Mario); } // KEY pressed M
 	
 	if (((sprite->animation() != DOWN_LEFT) || (sprite->animation() != DOWN_RIGHT)) && (Mariostate != Small_Mario)) { mario_size = glm::ivec2(16, 32); }
 
@@ -261,10 +266,12 @@ void Player::update(int deltaTime)
 		Looking_left = true;
 		if(sprite->animation() != MOVE_LEFT)
 			sprite->changeAnimation(MOVE_LEFT);
-		posPlayer.x -= 2;
+
+		velPlayer.x = max(velPlayer.x-acceleration, -max_speed);
 		if(map->collisionMoveLeft(posPlayer, mario_size))
 		{
-			posPlayer.x += 2;
+
+			velPlayer.x = 0;
 			sprite->changeAnimation(STAND_LEFT);
 		}
 	}
@@ -273,10 +280,12 @@ void Player::update(int deltaTime)
 		Looking_left = false;
 		if(sprite->animation() != MOVE_RIGHT)
 			sprite->changeAnimation(MOVE_RIGHT);
-		posPlayer.x += 2;
+
+		velPlayer.x = min(velPlayer.x + acceleration, max_speed);
 		if(map->collisionMoveRight(posPlayer, mario_size))
 		{
-			posPlayer.x -= 2;
+
+			velPlayer.x = 0;
 			sprite->changeAnimation(STAND_RIGHT);
 		}
 	}
@@ -289,29 +298,36 @@ void Player::update(int deltaTime)
 	}
 	else
 	{
+		if (velPlayer.x > 0) velPlayer.x -= acceleration;
+		if (velPlayer.x < 0) velPlayer.x += acceleration;
+
 		if(Looking_left) sprite->changeAnimation(STAND_LEFT);
 		else sprite->changeAnimation(STAND_RIGHT);
 	}
 	
 	if(bJumping)
 	{
-		if (map->collisionMoveUp(posPlayer, mario_size)) { jumpAngle = 170; } // to touch
-		if (Looking_left) sprite->changeAnimation(JUMP_LEFT);
-		else sprite->changeAnimation(JUMP_RIGHT);
-		
 		jumpAngle += JUMP_ANGLE_STEP;
-		if(jumpAngle == 180)
-		{
-			bJumping = false;
-			sprite->changeAnimation(STAND_RIGHT);
-			posPlayer.y = startY;
-		}
-		else
-		{
-			posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
-			if(jumpAngle > 90)
-				bJumping = !map->collisionMoveDown(posPlayer, mario_size, &posPlayer.y);
-		}
+			
+			if (Looking_left) sprite->changeAnimation(JUMP_LEFT);
+			else sprite->changeAnimation(JUMP_RIGHT);
+
+
+			if (jumpAngle == 180)
+			{
+				bJumping = false;
+				sprite->changeAnimation(STAND_RIGHT);
+				posPlayer.y = startY;
+			}
+			else
+			{
+				posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
+				if (jumpAngle > 90) { 
+					bJumping = !map->collisionMoveDown(posPlayer, mario_size, &posPlayer.y);
+				}
+				else if (map->collisionMoveUp(posPlayer, mario_size)) { jumpAngle = 90 + abs(90 - jumpAngle); } // to touch	
+			}
+		
 	}
 	else
 	{
@@ -322,6 +338,9 @@ void Player::update(int deltaTime)
 		{
 			if (Game::instance().getSpecialKey(GLUT_KEY_UP))
 			{
+				if (Mariostate == Small_Mario) PlaySound(L"sounds/smb_jump-small.wav", NULL, SND_ASYNC);
+				else PlaySound(L"sounds/smb_jump-super.wav", NULL, SND_ASYNC);
+				
 				bJumping = true;
 				jumpAngle = 0;
 				startY = posPlayer.y;
@@ -329,12 +348,16 @@ void Player::update(int deltaTime)
 		}
 		
 	}
-	
+	posPlayer.x += velPlayer.x;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
 glm::ivec2 Player::getPos() {
 	return posPlayer;
+}
+
+glm::ivec2 Player::gettileMapDispl() {
+	return tileMapDispl;
 }
 
 void Player::render()
@@ -354,5 +377,13 @@ void Player::setPosition(const glm::vec2 &pos)
 }
 
 
-
+int Player::getcoins() {
+	return coins;
+}
+int Player::getlives() {
+	return lives;
+}
+int Player::getscore() {
+	return score;
+}
 
