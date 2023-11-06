@@ -79,7 +79,7 @@ static void idleCallback()
 	}
 }
 
-#define GAME_SCALE_FACTOR 1.5
+#define GAME_SCALE_FACTOR 1
 
 int main(int argc, char **argv)
 {

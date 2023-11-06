@@ -32,6 +32,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	ChangeType(Small_Mario);
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
+
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	
 }
@@ -253,8 +254,6 @@ void Player::ChangeType(int statePlayer){
 
 void Player::update(int deltaTime)
 {
-	
-
 	if (Game::instance().getKey(103) || Game::instance().getKey(71)) { if (Mariostate == Small_Mario) posPlayer.y -=16; ChangeType(Star_Mario); } // KEY pressed G
 	else if (Game::instance().getKey(109) || Game::instance().getKey(77)) { if (Mariostate == Small_Mario) posPlayer.y -= 16; ChangeType(Medium_Mario); } // KEY pressed M
 	
@@ -349,7 +348,7 @@ void Player::update(int deltaTime)
 		
 	}
 	posPlayer.x += velPlayer.x;
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+	sprite->setPosition(glm::vec2(float(posPlayer.x), float(posPlayer.y)));
 }
 
 glm::ivec2 Player::getPos() {
