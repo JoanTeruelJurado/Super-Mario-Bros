@@ -7,6 +7,7 @@
 
 
 #define FALL_STEP 4
+#define TIME_DEATH 2
 
 
 enum GoombaAnims
@@ -19,6 +20,7 @@ void Goomba::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 {
 	goLeft = TRUE;
 	kill = FALSE;
+	timeDeath = TIME_DEATH;
 	spritesheet.loadFromFile("images/little_goomba.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(16, 16), glm::vec2(0.25f, 0.25f), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(2);
@@ -42,6 +44,7 @@ void Goomba::update(int deltaTime)
 	if (kill) {
 		if (sprite->animation() != DEATH)
 			sprite->changeAnimation(DEATH);
+		timeDeath -= deltaTime;
 	}
 	else {
 		if (goLeft) {
@@ -85,4 +88,8 @@ glm::vec2 Goomba::getPosition() {
 
 void Goomba::setKill() {
 	kill = true;
+}
+
+float Goomba::getTimeDeath() {
+	return timeDeath;
 }

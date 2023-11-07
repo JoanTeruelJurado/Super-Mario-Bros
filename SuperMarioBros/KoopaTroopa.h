@@ -1,12 +1,12 @@
-#ifndef _GOOMBA_INCLUDE
-#define _GOOMBA_INCLUDE
+#ifndef _KOOPATROOPA_INCLUDE
+#define _KOOPATROOPA_INCLUDE
 
 
 #include "Sprite.h"
 #include "TileMap.h"
 
 
-class Goomba
+class KoopaTroopa
 {
 
 public:
@@ -19,18 +19,15 @@ public:
 
 	glm::vec2 getPosition();
 	void setKill();
-	float getTimeDeath();
 
 private:
 	glm::ivec2 tileMapDispl;
-	glm::vec2 posGoomba;
+	glm::vec2 posKoopaTroopa;
 	Texture spritesheet;
 	Sprite* sprite;
 	TileMap* map;
 	bool goLeft, kill;
-	float timeDeath;
 };
 
 
-#endif // _GOOMBA_INCLUDE
-
+#endif // _KOOPATROOPA_INCLUDE
