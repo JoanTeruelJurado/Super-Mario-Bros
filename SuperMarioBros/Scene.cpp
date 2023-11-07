@@ -13,14 +13,14 @@
 #define INIT_PLAYER_X_TILES 1
 #define INIT_PLAYER_Y_TILES 2
 
-int scroll;
-
 Scene::Scene()
 {
+	scroll = 0;
 	map = NULL;
 	player = NULL;
 	goomba = NULL;
 	menu = NULL;
+	camera = new Camera();
 }
 
 Scene::~Scene()
@@ -33,39 +33,44 @@ Scene::~Scene()
 		delete goomba;
 	if (menu != NULL)
 		delete menu;
+	
 }
 
 
 void Scene::init(const int &lv)
 {
+	
 	level = lv;
 	if (level == 0) {
 		initShaders();
 		menu = new Menu();
 		menu->init(texProgram);
-		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+		projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 		PlaySound(L"sounds/01.-Ground-Theme.wav", NULL, SND_ASYNC|SND_LOOP);
 	}
 	else {
 		initShaders();
 		scroll = 0;
-		map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+		map = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram);
 		player = new Player();
-		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		player->init(glm::ivec2(0, 0), texProgram);
 		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 		player->setTileMap(map);
 		goomba = new Goomba();
 		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 		goomba->setPosition(glm::vec2((INIT_PLAYER_X_TILES + 15) * map->getTileSize(), (INIT_PLAYER_Y_TILES + 9) * map->getTileSize()));
 		goomba->setTileMap(map);
-		projection = glm::ortho(225.f, float(SCREEN_WIDTH - 100), float(SCREEN_HEIGHT - 250), 0.f);
+		projection = glm::ortho(0.f, float(SCREEN_WIDTH ), float(SCREEN_HEIGHT), 0.f);
 		currentTime = 0.0f;
 	}
 }
 
 void Scene::update(int deltaTime)
 {
-	
+
+	if (level != 0) scroll = max(player->getPos().x, scroll);
+	if (Game::instance().getSpecialKey(0x066)) camera->CameraUpdate(scroll);
+
 	if (paused) return;
 	currentTime += deltaTime;
 	if (level != 0) {
@@ -85,26 +90,29 @@ void Scene::update(int deltaTime)
 
 void Scene::render()
 {
-	glm::mat4 modelview;
+	glm::mat4 model, view;
 
 	texProgram.use();
 	texProgram.setUniformMatrix4f("projection", projection);
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	modelview = glm::mat4(1.0f);
+	model = glm::mat4(1.0f);
+	view = camera->view();
 
 	if (level != 0) {
-		scroll = player->getPos().x;
-		// modelview = glm::translate(modelview, glm::vec3(-scroll, 0, 0));
+		//scroll = player->getPos().x;
+		// = glm::translate(modelview, glm::vec3(-scroll, 0, 0));
 		//modelview = glm::translate(modelview, glm::vec3(-(float(player->gettileMapDispl().x + player->getPos().x)), 0, 0));
-		
-		texProgram.setUniformMatrix4f("modelview", modelview);
+
+		texProgram.setUniformMatrix4f("model", model);
+		texProgram.setUniformMatrix4f("view", view);
 		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 		map->render();
 		player->render();
 		goomba->render();
 	}
 	else {
-		texProgram.setUniformMatrix4f("modelview", modelview);
+		texProgram.setUniformMatrix4f("model", model);
+		texProgram.setUniformMatrix4f("view", view);
 		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 		menu->render();
 	}
@@ -149,7 +157,7 @@ void Scene::changeScene(int sceneID) {
 	initShaders();
 	if (sceneID == 1) map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	else if (sceneID == 2) map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	player = new Player();
+	//ayer = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);

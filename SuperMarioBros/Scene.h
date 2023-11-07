@@ -8,7 +8,7 @@
 #include "Player.h"
 #include "Goomba.h"
 #include "Menu.h"
-
+#include "Camera.h"
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
@@ -41,7 +41,8 @@ private:
 	float currentTime;
 	glm::mat4 projection;
 	Menu  *menu;
-	int level;
+	int level, scroll;
+	Camera* camera;
 };
 
 
