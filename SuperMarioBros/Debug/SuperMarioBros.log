@@ -1,5 +1,6 @@
 ﻿  Game.cpp
   Goomba.cpp
+  KoopaTroopa.cpp
   main.cpp
 C:\Users\eric_\Documents\GitHub\Super-Mario-Bros\SuperMarioBros\main.cpp(90,66): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
 C:\Users\eric_\Documents\GitHub\Super-Mario-Bros\SuperMarioBros\main.cpp(90,33): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
