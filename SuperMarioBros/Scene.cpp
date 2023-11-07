@@ -13,6 +13,8 @@
 #define INIT_PLAYER_X_TILES 1
 #define INIT_PLAYER_Y_TILES 2
 
+#define ortho_size 300.f
+
 Scene::Scene()
 {
 	scroll = 0;
@@ -52,16 +54,22 @@ void Scene::init(const int &lv)
 		player->init(glm::ivec2(0, 0), texProgram);
 		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 		player->setTileMap(map);
-		projection = glm::ortho(0.f, float(SCREEN_WIDTH ), float(SCREEN_HEIGHT), 0.f);
+		//projection = glm::ortho(0.f, float(SCREEN_WIDTH ), float(SCREEN_HEIGHT), 0.f);
+		projection = glm::ortho(0.f, 300.f, 225.f, 0.f); // 300 225
 		currentTime = 0.0f;
 	}
 }
 
 void Scene::update(int deltaTime)
 {
-
-	if (level != 0) scroll = max(player->getPos().x, scroll);
-	if (Game::instance().getSpecialKey(0x066)) camera->CameraUpdate(scroll);
+	if (level != 0) {
+		int marioposx = player->getPos().x;
+		if (marioposx >= scroll + ortho_size /2) {
+			scroll += abs(marioposx - (scroll + ortho_size / 2));
+			camera->CameraUpdate(scroll);
+		}
+	}
+	
 
 	if (paused) return;
 	currentTime += deltaTime;

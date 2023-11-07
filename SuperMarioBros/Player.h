@@ -43,6 +43,7 @@ private:
 	ShaderProgram shader;
 	float acceleration = 0.0625; // 1/16 of a pixel
 
+	void death_anim();
 
 	int coins  = 0;
 	int lives = 3;
