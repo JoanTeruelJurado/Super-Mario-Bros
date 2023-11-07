@@ -20,6 +20,8 @@ Scene::Scene()
 	scroll = 0;
 	map = NULL;
 	player = NULL;
+	goomba = NULL;
+	koopatroopa = NULL;
 	camera = new Camera();
 }
 
@@ -29,6 +31,10 @@ Scene::~Scene()
 		delete map;
 	if(player != NULL)
 		delete player;
+	if (goomba != NULL)
+		delete goomba;
+	if (koopatroopa != NULL)
+		delete koopatroopa;
 	if (menu != NULL)
 		delete menu;
 	
@@ -54,6 +60,14 @@ void Scene::init(const int &lv)
 		player->init(glm::ivec2(0, 0), texProgram);
 		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 		player->setTileMap(map);
+		goomba = new Goomba();
+		goomba->init(glm::ivec2(0, 0), texProgram);
+		goomba->setPosition(glm::vec2(10 * map->getTileSize(), 11 * map->getTileSize()));
+		goomba->setTileMap(map);
+		koopatroopa = new KoopaTroopa();
+		koopatroopa->init(glm::ivec2(0, 0), texProgram);
+		koopatroopa->setPosition(glm::vec2(15 * map->getTileSize(), 11 * map->getTileSize()));
+		koopatroopa->setTileMap(map);
 		//projection = glm::ortho(0.f, float(SCREEN_WIDTH ), float(SCREEN_HEIGHT), 0.f);
 		projection = glm::ortho(0.f, 300.f, 225.f, 0.f); // 300 225
 		currentTime = 0.0f;
@@ -69,12 +83,16 @@ void Scene::update(int deltaTime)
 			camera->CameraUpdate(scroll);
 		}
 	}
-	
 
 	if (paused) return;
 	currentTime += deltaTime;
 	if (level != 0) {
 		player->update(deltaTime);
+		if (isKill(player->getPos(), goomba->getPosition())) {
+			goomba->setKill();
+		}
+		player->update(deltaTime);
+		goomba->update(deltaTime);
 	}
 	else {
 		level = menu->update(deltaTime);
@@ -93,22 +111,17 @@ void Scene::render()
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	model = glm::mat4(1.0f);
 	view = camera->view();
+	texProgram.setUniformMatrix4f("model", model);
+	texProgram.setUniformMatrix4f("view", view);
+	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 
 	if (level != 0) {
-		//scroll = player->getPos().x;
-		// = glm::translate(modelview, glm::vec3(-scroll, 0, 0));
-		//modelview = glm::translate(modelview, glm::vec3(-(float(player->gettileMapDispl().x + player->getPos().x)), 0, 0));
-
-		texProgram.setUniformMatrix4f("model", model);
-		texProgram.setUniformMatrix4f("view", view);
-		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 		map->render();
 		player->render();
+		goomba->render();
+		koopatroopa->render();
 	}
 	else {
-		texProgram.setUniformMatrix4f("model", model);
-		texProgram.setUniformMatrix4f("view", view);
-		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 		menu->render();
 	}
 	
@@ -162,6 +175,19 @@ void Scene::changeScene(int sceneID) {
 	player->render();
 	currentTime = 0.0f;
 	return;
+}
+
+bool Scene::isKill(glm::vec2 posPlayer, glm::vec2 posEnemy) {
+	float leftP = posPlayer.x;
+	float rightP = posPlayer.x + 16;
+	float bottomP = posPlayer.y;
+
+	float leftE = posEnemy.x;
+	float rightE = posEnemy.x + 16;
+	float topE = posEnemy.y - 16;
+
+	if ((bottomP - 2 >= topE && bottomP <= topE + 2) && (leftP < rightE && rightP > leftE)) return true;
+	return false;
 }
 
 
