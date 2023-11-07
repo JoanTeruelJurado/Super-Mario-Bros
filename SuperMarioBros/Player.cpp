@@ -10,7 +10,7 @@
 // bool pl = PlaySound(L"sounds/smb_gameover.wav", NULL, SND_SYNC);  para la musica
 
 #define JUMP_ANGLE_STEP 4
-#define JUMP_HEIGHT 5*16
+#define JUMP_HEIGHT 4*16
 #define FALL_STEP 4
 #define max_speed 4.5f/2.0f
 #define max_speed_running (max_speed+1.f)
@@ -274,9 +274,8 @@ void Player::update(int deltaTime)
 	
 	if (((sprite->animation() != DOWN_LEFT) || (sprite->animation() != DOWN_RIGHT)) && (Mariostate != Small_Mario)) { mario_size = glm::ivec2(16, 32); }
 
-	if (((velPlayer.x) > 0) && (map->collisionMoveRight(posPlayer, mario_size))) { velPlayer.x = 0; } //posPlayer.x -= (posPlayer.x % 16);
-	if (((velPlayer.x) < 0) && (map->collisionMoveLeft(posPlayer, mario_size))) { velPlayer.x = 0; } //posPlayer.x += (posPlayer.x % 16);
-	
+	if (((velPlayer.x) > 0) && (map->collisionMoveRight(posPlayer, mario_size))) { velPlayer.x = 0; posPlayer.x -= (posPlayer.x % 16); }
+	if (((velPlayer.x) < 0) && (map->collisionMoveLeft(posPlayer, mario_size))) { velPlayer.x = 0; posPlayer.x += 16-(posPlayer.x % 16);}
 
 	sprite->update(deltaTime);
 	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT))
@@ -288,7 +287,7 @@ void Player::update(int deltaTime)
 		velPlayer.x = max(velPlayer.x-acceleration, -max_speed);
 		if(map->collisionMoveLeft(posPlayer, mario_size))
 		{
-			posPlayer.x += (posPlayer.x % 16);
+			posPlayer.x += 16-(posPlayer.x % 16);
 			velPlayer.x = 0;
 			sprite->changeAnimation(STAND_LEFT);
 		}
@@ -354,6 +353,7 @@ void Player::update(int deltaTime)
 
 		if (map->collisionMoveDown(posPlayer, mario_size, &posPlayer.y))
 		{
+
 			if (Game::instance().getSpecialKey(GLUT_KEY_UP))
 			{
 				if (Mariostate == Small_Mario) PlaySound(L"sounds/smb_jump-small.wav", NULL, SND_ASYNC);
@@ -408,7 +408,7 @@ void Player::death_anim(){
 		}
 		else
 		{
-			posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
+			posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
 		}
 
 	}

@@ -85,6 +85,7 @@ bool TileMap::loadLevel(const string &levelFile)
 			fin.get(tile);
 			if(tile == '0' )
 				map[j*mapSize.x+i] = 0;
+			else if (tile >= 'a') map[j * mapSize.x + i] = tile - int('a') +10;
 			else {
 				map[j * mapSize.x + i] = tile - int('0');
 			}
@@ -209,13 +210,12 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 	
 	x0 = pos.x / tileSize;
 	x1 = (pos.x + size.x - 1) / tileSize;
-	y = (pos.y + size.y - 1) / tileSize;
+	y = (pos.y + size.y) / tileSize;
 
 	for(int x=x0; x<=x1; x++)
 	{
 		if(map[y*mapSize.x+x] != 0)
 		{
-			//if (map[y * mapSize.x + x] == 5 || map[y * mapSize.x + x] == 6)  std::cout << *posY << " " << tileSize << " " << y << " " << size.y << endl;
 			if (*posY - tileSize * y + size.y <= 4)
 			{
 				*posY = tileSize * y - size.y;
