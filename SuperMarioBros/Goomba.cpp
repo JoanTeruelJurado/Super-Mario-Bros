@@ -7,7 +7,7 @@
 
 
 #define FALL_STEP 4
-#define TIME_DEATH 2
+#define TIME_DEATH 250
 
 
 enum GoombaAnims
@@ -88,6 +88,10 @@ glm::vec2 Goomba::getPosition() {
 
 void Goomba::setKill() {
 	kill = true;
+}
+
+bool Goomba::getKill() {
+	return kill;
 }
 
 float Goomba::getTimeDeath() {

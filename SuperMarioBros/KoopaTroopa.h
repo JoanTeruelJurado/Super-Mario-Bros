@@ -18,7 +18,11 @@ public:
 	void setPosition(const glm::vec2& pos);
 
 	glm::vec2 getPosition();
+	void setHit();
+	bool getHit();
 	void setKill();
+	bool getKill();
+	void setLeft();
 
 private:
 	glm::ivec2 tileMapDispl;
@@ -26,7 +30,8 @@ private:
 	Texture spritesheet;
 	Sprite* sprite;
 	TileMap* map;
-	bool goLeft, kill;
+	bool goLeft, hit, kill;
+	float timeRevive, timeDeath;
 };
 
 

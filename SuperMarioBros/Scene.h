@@ -29,7 +29,8 @@ public:
 	void update(int deltaTime);
 	void render();
 	void changeScene(int sceneID);
-	bool isKill(glm::vec2 posPlayer, glm::vec2 posEnemy);
+	bool isKill(glm::vec2 posPlayer, glm::vec2 posEnemy, bool kill);
+	bool shellKill(glm::vec2 posShell, glm::vec2 pos);
 
 private:
 	void initShaders();
@@ -37,8 +38,8 @@ private:
 private:
 	TileMap *map;
 	Player *player;
-	Goomba* goomba;
-	KoopaTroopa* koopatroopa;
+	Goomba *goomba;
+	KoopaTroopa *koopatroopa;
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;

@@ -7,6 +7,8 @@
 
 
 #define FALL_STEP 4
+#define TIME_REVIVE 4000
+#define TIME_DEATH 3000
 
 
 enum KoopaTroopaAnims
@@ -19,9 +21,11 @@ void KoopaTroopa::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgra
 {
 	goLeft = TRUE;
 	kill = FALSE;
+	timeRevive = TIME_REVIVE;
+	timeDeath = TIME_DEATH;
 	spritesheet.loadFromFile("images/koopa_troopa.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(glm::ivec2(16, 16), glm::vec2(0.125f, 0.25f), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(2);
+	sprite = Sprite::createSprite(glm::ivec2(16, 24), glm::vec2(0.125f, 0.25f), &spritesheet, &shaderProgram);
+	sprite->setNumberAnimations(4);
 
 	sprite->setAnimationSpeed(MOVE_LEFT, 8);
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0 * 0.125f, 1.f));
@@ -32,6 +36,7 @@ void KoopaTroopa::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgra
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(3 * 0.125f, 1.f));
 
 	sprite->setAnimationSpeed(REVIVE, 8);
+	sprite->addKeyframe(REVIVE, glm::vec2(4 * 0.125f, 1.f));
 	sprite->addKeyframe(REVIVE, glm::vec2(5 * 0.125f, 1.f));
 
 	sprite->setAnimationSpeed(DEATH, 8);
@@ -49,6 +54,36 @@ void KoopaTroopa::update(int deltaTime)
 	if (kill) {
 		if (sprite->animation() != DEATH)
 			sprite->changeAnimation(DEATH);
+		if (goLeft) {
+			posKoopaTroopa.x -= 3.f;
+			if (map->collisionMoveLeft(posKoopaTroopa, glm::ivec2(16, 16))) {
+				posKoopaTroopa.x += 3.f;
+				goLeft = FALSE;
+			}
+		}
+		else {
+			posKoopaTroopa.x += 3.f;
+			if (map->collisionMoveRight(posKoopaTroopa, glm::ivec2(16, 16))) {
+				posKoopaTroopa.x -= 3.f;
+				goLeft = TRUE;
+			}
+		}
+	}
+	else if (hit) {
+		if (timeDeath >= 0 && sprite->animation() != DEATH)
+			sprite->changeAnimation(DEATH);
+		if (timeDeath < 0) {
+			if (sprite->animation() != REVIVE)
+				sprite->changeAnimation(REVIVE);
+			if (timeRevive < 0) {
+				if(goLeft)
+					sprite->changeAnimation(MOVE_LEFT);
+				else sprite->changeAnimation(MOVE_RIGHT);
+				hit = false;
+			}
+			timeRevive -= deltaTime;
+		}
+		timeDeath -= deltaTime;
 	}
 	else {
 		if (goLeft) {
@@ -94,6 +129,22 @@ glm::vec2 KoopaTroopa::getPosition() {
 	return posKoopaTroopa;
 }
 
+void KoopaTroopa::setHit() {
+	hit = true;
+}
+
+bool KoopaTroopa::getHit() {
+	return hit;
+}
+
 void KoopaTroopa::setKill() {
 	kill = true;
+}
+
+bool KoopaTroopa::getKill() {
+	return kill;
+}
+
+void KoopaTroopa::setLeft() {
+	goLeft = true;
 }

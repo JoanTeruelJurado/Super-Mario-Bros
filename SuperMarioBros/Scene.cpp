@@ -66,7 +66,7 @@ void Scene::init(const int &lv)
 		goomba->setTileMap(map);
 		koopatroopa = new KoopaTroopa();
 		koopatroopa->init(glm::ivec2(0, 0), texProgram);
-		koopatroopa->setPosition(glm::vec2(15 * map->getTileSize(), 11 * map->getTileSize()));
+		koopatroopa->setPosition(glm::vec2(15 * map->getTileSize(), 11 * map->getTileSize() - 8));
 		koopatroopa->setTileMap(map);
 		//projection = glm::ortho(0.f, float(SCREEN_WIDTH ), float(SCREEN_HEIGHT), 0.f);
 		projection = glm::ortho(0.f, 300.f, 225.f, 0.f); // 300 225
@@ -87,12 +87,29 @@ void Scene::update(int deltaTime)
 	if (paused) return;
 	currentTime += deltaTime;
 	if (level != 0) {
-		player->update(deltaTime);
-		if (isKill(player->getPos(), goomba->getPosition())) {
+		if (isKill(player->getPos(), goomba->getPosition(), goomba->getKill()))
 			goomba->setKill();
+		if (goomba->getTimeDeath() < 0)
+			goomba->setPosition(glm::vec2(0, 20 * map->getTileSize()));
+		if (koopatroopa->getKill()) {
+			if (isKill(player->getPos(), koopatroopa->getPosition(), koopatroopa->getHit()))
+				koopatroopa->setPosition(glm::vec2(0, 20 * map->getTileSize()));
+			else
+				if (shellKill(koopatroopa->getPosition(), goomba->getPosition()))
+					goomba->setKill();
+				/*if (shellKill(koopatroopa->getPosition(), player->getPos())) {
+					player->setDeath();
+				}*/ //-> Descomentar cuando funcione animación matar player
+		}
+		else if (isKill(player->getPos(), koopatroopa->getPosition(), koopatroopa->getHit())) {
+			if (!koopatroopa->getHit()) {
+				koopatroopa->setHit();
+			}
+			koopatroopa->setKill();
 		}
 		player->update(deltaTime);
 		goomba->update(deltaTime);
+		koopatroopa->update(deltaTime);		
 	}
 	else {
 		level = menu->update(deltaTime);
@@ -177,7 +194,7 @@ void Scene::changeScene(int sceneID) {
 	return;
 }
 
-bool Scene::isKill(glm::vec2 posPlayer, glm::vec2 posEnemy) {
+bool Scene::isKill(glm::vec2 posPlayer, glm::vec2 posEnemy, bool kill) {
 	float leftP = posPlayer.x;
 	float rightP = posPlayer.x + 16;
 	float bottomP = posPlayer.y;
@@ -187,6 +204,20 @@ bool Scene::isKill(glm::vec2 posPlayer, glm::vec2 posEnemy) {
 	float topE = posEnemy.y - 16;
 
 	if ((bottomP - 2 >= topE && bottomP <= topE + 2) && (leftP < rightE && rightP > leftE)) return true;
+	else if (!kill && (bottomP > topE) && (leftP < rightE && rightP > leftE)) player->setDeath();
+	return false;
+}
+
+bool Scene::shellKill(glm::vec2 posShell, glm::vec2 pos) {
+	float leftS = posShell.x;
+	float rightS = posShell.x + 16;
+	float bottomS = posShell.y;
+
+	float left = pos.x;
+	float right = pos.x + 16;
+	float top = pos.y - 16;
+
+	if ((bottomS > top) && (leftS < right && rightS > left))  return true;
 	return false;
 }
 

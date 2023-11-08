@@ -19,6 +19,7 @@ public:
 
 	glm::vec2 getPosition();
 	void setKill();
+	bool getKill();
 	float getTimeDeath();
 
 private:
