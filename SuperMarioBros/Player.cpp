@@ -422,6 +422,11 @@ void Player::setPosition(const glm::vec2 &pos)
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
+void Player::setDeath()
+{
+	sprite->changeAnimation(DEATH);
+	death_anim();
+}
 
 void Player::death_anim(){
 

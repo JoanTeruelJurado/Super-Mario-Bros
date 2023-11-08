@@ -20,6 +20,7 @@ public:
 	void ChangeType(int statePlayer);
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
+	void setDeath();
 	glm::ivec2 getPos();
 	glm::ivec2 gettileMapDispl();
 	int getcoins();
