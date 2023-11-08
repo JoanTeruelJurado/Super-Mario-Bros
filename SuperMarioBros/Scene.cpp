@@ -11,7 +11,7 @@
 #define SCREEN_Y 16
 
 #define INIT_PLAYER_X_TILES 1
-#define INIT_PLAYER_Y_TILES 2
+#define INIT_PLAYER_Y_TILES 11
 
 #define ortho_size 300.f
 
@@ -19,18 +19,18 @@ Scene::Scene()
 {
 	scroll = 0;
 	map = NULL;
+	background = NULL;
 	player = NULL;
 	camera = new Camera();
 }
 
 Scene::~Scene()
 {
-	if(map != NULL)
-		delete map;
-	if(player != NULL)
-		delete player;
-	if (menu != NULL)
-		delete menu;
+	if (map != NULL)	delete map;
+	if (player != NULL) delete player;
+	if (menu != NULL) delete menu;
+	if (background != NULL) delete background;
+	
 	
 }
 
@@ -50,6 +50,7 @@ void Scene::init(const int &lv)
 		initShaders();
 		scroll = 0;
 		map = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram);
+		//background = TileMap::get
 		player = new Player();
 		player->init(glm::ivec2(0, 0), texProgram);
 		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
@@ -67,8 +68,18 @@ void Scene::update(int deltaTime)
 		if (marioposx >= scroll + ortho_size /2) {
 			scroll += abs(marioposx - (scroll + ortho_size / 2));
 			camera->CameraUpdate(scroll);
+			player->setMinPos(scroll);
+		}
+		if (player->getandset()) { //el jugador ha muerto
+			scroll = 0;
+			player->init(glm::ivec2(0, 0), texProgram);
+			player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+			camera->CameraUpdate(0);
+			player->setMinPos(0);
 		}
 	}
+
+	
 	
 
 	if (paused) return;
@@ -95,10 +106,6 @@ void Scene::render()
 	view = camera->view();
 
 	if (level != 0) {
-		//scroll = player->getPos().x;
-		// = glm::translate(modelview, glm::vec3(-scroll, 0, 0));
-		//modelview = glm::translate(modelview, glm::vec3(-(float(player->gettileMapDispl().x + player->getPos().x)), 0, 0));
-
 		texProgram.setUniformMatrix4f("model", model);
 		texProgram.setUniformMatrix4f("view", view);
 		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
@@ -150,18 +157,23 @@ void Scene::changeScene(int sceneID) {
 	level = sceneID;
 	scroll = 0;
 	initShaders();
-	if (sceneID == 1) map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	else if (sceneID == 2) map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	//ayer = new Player();
-	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	if (sceneID == 1) map = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram);
+	else if (sceneID == 2) map = TileMap::createTileMap("levels/level02.txt", glm::vec2(0, 0), texProgram);
+	player = new Player();
+	player->init(glm::ivec2(0, 0), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
-	projection = glm::ortho(224.f, 524.f, 250.f, 25.f); //300 225
+
+	projection = glm::ortho(0.f, 300.f, 225.f, 0.f); //300 225
 
 	map->render();
 	player->render();
 	currentTime = 0.0f;
 	return;
+}
+
+int Scene::getScroll() {
+	return scroll;
 }
 
 

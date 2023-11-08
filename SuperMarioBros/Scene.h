@@ -27,12 +27,13 @@ public:
 	void update(int deltaTime);
 	void render();
 	void changeScene(int sceneID);
-
+	int getScroll();
 private:
 	void initShaders();
 
 private:
 	TileMap *map;
+	TileMap* background;
 	Player *player;
 	ShaderProgram texProgram;
 	float currentTime;
