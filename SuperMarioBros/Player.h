@@ -26,6 +26,8 @@ public:
 	int getcoins();
 	int getlives();
 	int getscore();
+	void setMinPos(int scroll);
+	bool getandset();
 
 	enum TypePlayer {
 		Small_Mario, Star_Mario, Fire_Mario, Medium_Mario
@@ -46,9 +48,13 @@ private:
 
 	void death_anim();
 
+	int MinPos;
+	
 	int coins  = 0;
 	int lives = 3;
 	int score = 0;
+
+	bool handshake = 0;
 };
 
 

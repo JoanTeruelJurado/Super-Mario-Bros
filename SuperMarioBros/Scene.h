@@ -32,11 +32,13 @@ public:
 	bool isKill(glm::vec2 posPlayer, glm::vec2 posEnemy, bool kill);
 	bool shellKill(glm::vec2 posShell, glm::vec2 pos);
 
+	int getScroll();
 private:
 	void initShaders();
 
 private:
 	TileMap *map;
+	TileMap* background;
 	Player *player;
 	Goomba *goomba;
 	KoopaTroopa *koopatroopa;

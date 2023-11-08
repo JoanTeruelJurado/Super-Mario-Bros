@@ -22,6 +22,7 @@ private:
 public:
 	// Tile maps can only be created inside an OpenGL context
 	static TileMap *createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program);
+	//static TileMap *getBackgroundMap();
 
 	~TileMap();
 
@@ -33,21 +34,23 @@ public:
 	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
-	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size) const;
+	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, const int Mariostate) const;
+	
 private:
 	bool loadLevel(const string &levelFile);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
+	void prepareArraysBack(const glm::vec2& minCoords, ShaderProgram& program);
 
 private:
 	GLuint vao;
 	GLuint vbo;
 	GLint posLocation, texCoordLocation;
 	int nTiles;
-	glm::ivec2 position, mapSize, tilesheetSize;
-	int tileSize, blockSize;
-	Texture tilesheet;
-	glm::vec2 tileTexSize;
-	int *map;
+	glm::ivec2 position, mapSize, tilesheetSize, tilesheetBackSize;
+	int tileSize, blockSize, tileSizeBack, blockSizeBack;
+	Texture tilesheet, tilesheetBack;
+	glm::vec2 tileTexSize, tileTexSizeBack;
+	int *map, *backmap;
 
 };
 
