@@ -64,11 +64,11 @@ void Scene::init(const int &lv)
 		player->setTileMap(map);
 		goomba = new Goomba();
 		goomba->init(glm::ivec2(0, 0), texProgram);
-		goomba->setPosition(glm::vec2(10 * map->getTileSize(), 11 * map->getTileSize()));
+		goomba->setPosition(glm::vec2(10 * map->getTileSize(), 12 * map->getTileSize()));
 		goomba->setTileMap(map);
 		koopatroopa = new KoopaTroopa();
 		koopatroopa->init(glm::ivec2(0, 0), texProgram);
-		koopatroopa->setPosition(glm::vec2(15 * map->getTileSize(), 11 * map->getTileSize() - 8));
+		koopatroopa->setPosition(glm::vec2(15 * map->getTileSize(), 12 * map->getTileSize() - 8));
 		koopatroopa->setTileMap(map);
 		//projection = glm::ortho(0.f, float(SCREEN_WIDTH ), float(SCREEN_HEIGHT), 0.f);
 		projection = glm::ortho(0.f, 300.f, 225.f, 0.f); // 300 225
