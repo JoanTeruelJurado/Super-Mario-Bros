@@ -30,8 +30,11 @@ TileMap::~TileMap()
 
 void TileMap::render() const
 {
+	//prepareArrays(glm::vec2(0,0), nullptr);
+
 	glEnable(GL_TEXTURE_2D);
 	tilesheet.use();
+	//tilesheetBack.use();
 	glBindVertexArray(vao);
 	glEnableVertexAttribArray(posLocation);
 	glEnableVertexAttribArray(texCoordLocation);
@@ -253,18 +256,27 @@ bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) 
 	return false;
 }
 
-bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size) const
+enum TypePlayer
+{
+	Small_Mario, Star_Mario, Fire_Mario, Medium_Mario
+};
+
+bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, const int Mariostate) const
 {
 	int x0, x1, y;
 
 	x0 = pos.x / tileSize;
 	x1 = (pos.x + size.x - 1) / tileSize;	
 	y = (pos.y - 1) / tileSize;
-
+	int blockID = 0;
 	for (int x = x0; x <= x1; x++)
 	{
-		if (map[y * mapSize.x + x] != 0)
+		blockID = map[y * mapSize.x + x];
+		if (blockID != 0)
 		{
+			if (Mariostate != Small_Mario) {
+				map[y * mapSize.x + x] = 0;
+			}
 			return true;
 		}
 	}

@@ -285,13 +285,13 @@ void Player::update(int deltaTime)
 	
 	if (((sprite->animation() != DOWN_LEFT) || (sprite->animation() != DOWN_RIGHT)) && (Mariostate != Small_Mario)) { mario_size = glm::ivec2(16, 32); }
 
-	if (((velPlayer.x) > 0) && !(map->collisionMoveUp(posPlayer, mario_size))) {
+	if (((velPlayer.x) > 0) && !(map->collisionMoveUp(posPlayer, mario_size, Mariostate))) {
 		if (map->collisionMoveRight(posPlayer, mario_size)) {
 			velPlayer.x = 0;
 			posPlayer.x -= (posPlayer.x % 16);
 		}
 	}
-	else if (((velPlayer.x) < 0) && !(map->collisionMoveUp(posPlayer, mario_size))) {
+	else if (((velPlayer.x) < 0) && !(map->collisionMoveUp(posPlayer, mario_size, Mariostate))) {
 		if (map->collisionMoveLeft(posPlayer, mario_size)) {
 			velPlayer.x = 0;
 			posPlayer.x += 16-(posPlayer.x % 16);
@@ -368,7 +368,7 @@ void Player::update(int deltaTime)
 				if (jumpAngle > 90) { 
 					bJumping = !map->collisionMoveDown(posPlayer, mario_size, &posPlayer.y);
 				}
-				else if (map->collisionMoveUp(posPlayer, mario_size)) { jumpAngle = 90 + abs(90 - jumpAngle); } // to touch	
+				else if (map->collisionMoveUp(posPlayer, mario_size, Mariostate)) { jumpAngle = 90 + abs(90 - jumpAngle); } // to touch	
 			}
 		
 	}
