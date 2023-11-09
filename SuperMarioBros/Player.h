@@ -23,14 +23,20 @@ public:
 	void setDeath();
 	glm::ivec2 getPos();
 	glm::ivec2 gettileMapDispl();
+	void setcoins(int a);
+	void setlives(int a);
+	void setscore(int a);
+
+
 	int getcoins();
 	int getlives();
 	int getscore();
 	void setMinPos(int scroll);
-	bool getandset();
+	float gettime();
+	int getMariostate();
 
 	enum TypePlayer {
-		Small_Mario, Star_Mario, Fire_Mario, Medium_Mario
+		Small_Mario, Star_Mario, Fire_Mario, Medium_Mario, Dieing
 	};
 private:
 	bool bJumping;
@@ -44,9 +50,11 @@ private:
 	bool Looking_left = 0;
 	int Mariostate = Small_Mario;
 	ShaderProgram shader;
-	float acceleration = 0.0625; // 1/16 of a pixel
 
 	void death_anim();
+	void pre_death();
+	void CalculateVelocity();
+	void SettleCollisions();
 
 	int MinPos;
 	
@@ -54,7 +62,7 @@ private:
 	int lives = 3;
 	int score = 0;
 
-	bool handshake = 0;
+	float time = 30000.f;
 };
 
 

@@ -20,7 +20,6 @@ class Scene
 
 public:
 	bool paused = 0;
-	//int level = 1;
 
 	Scene();
 	~Scene();
@@ -37,8 +36,7 @@ private:
 	void initShaders();
 
 private:
-	TileMap *map;
-	TileMap* background;
+	TileMap *map, *backmap;
 	Player *player;
 	Goomba *goomba;
 	KoopaTroopa *koopatroopa;

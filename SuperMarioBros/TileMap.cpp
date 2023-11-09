@@ -8,16 +8,16 @@
 using namespace std;
 
 
-TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
+TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program, bool Back)
 {
-	TileMap *map = new TileMap(levelFile, minCoords, program);
+	TileMap *map = new TileMap(levelFile, minCoords, program, Back);
 	return map;
 }
 
 
-TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
+TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program, bool Back)
 {
-	loadLevel(levelFile);
+	loadLevel(levelFile, Back);
 	prepareArrays(minCoords, program);
 }
 
@@ -30,11 +30,9 @@ TileMap::~TileMap()
 
 void TileMap::render() const
 {
-	//prepareArrays(glm::vec2(0,0), nullptr);
 
 	glEnable(GL_TEXTURE_2D);
 	tilesheet.use();
-	//tilesheetBack.use();
 	glBindVertexArray(vao);
 	glEnableVertexAttribArray(posLocation);
 	glEnableVertexAttribArray(texCoordLocation);
@@ -47,8 +45,11 @@ void TileMap::free()
 	glDeleteBuffers(1, &vbo);
 }
 
-bool TileMap::loadLevel(const string& levelFile)
+bool TileMap::loadLevel(const string& levelFile, bool Back)
 {
+	if (Back) std::cout << "READING BACKGROUND... " << endl;
+	else std::cout << "READING FOREGROUND... " << endl;
+
 	ifstream fin;
 	string line, tilesheetFile;
 	stringstream sstream;
@@ -58,26 +59,35 @@ bool TileMap::loadLevel(const string& levelFile)
 	if (!fin.is_open())
 		return false;
 	getline(fin, line);
-	if (line.compare(0, 7, "TILEMAP") != 0)
-		return false;
+	if (Back) {
+		while ((line.compare(0, 7, "BACK") != 0)) getline(fin, line);
+	}
+	else if (line.compare(0, 7, "TILEMAP") != 0) return false;
+	
 	getline(fin, line);
 	sstream.str(line);
 	sstream >> mapSize.x >> mapSize.y;
+
 	getline(fin, line);
 	sstream.str(line);
 	sstream >> tileSize >> blockSize;
+
 	getline(fin, line);
 	sstream.str(line);
 	sstream >> tilesheetFile; //Tilesheet -> image.png
+	std::cout << line << endl;
 	tilesheet.loadFromFile(tilesheetFile, TEXTURE_PIXEL_FORMAT_RGBA);
 	tilesheet.setWrapS(GL_CLAMP_TO_EDGE);
 	tilesheet.setWrapT(GL_CLAMP_TO_EDGE);
 	tilesheet.setMinFilter(GL_NEAREST);
 	tilesheet.setMagFilter(GL_NEAREST);
+
 	getline(fin, line);
 	sstream.str(line);
-	sstream >> tilesheetSize.x >> tilesheetSize.y;
-	tileTexSize = glm::vec2(1.f / tilesheetSize.x, 1.f / tilesheetSize.y);
+	int X, Y;
+	sstream >> X >> Y;
+	tilesheetSize = glm::vec2(X, Y);
+	tileTexSize = glm::vec2(1.f / X, 1.f / Y);
 	map = new int[mapSize.x * mapSize.y];
 	for(int j=0; j<mapSize.y; j++)
 	{
@@ -96,45 +106,7 @@ bool TileMap::loadLevel(const string& levelFile)
 		fin.get(tile);
 #endif
 	}
-	getline(fin, line);
-	if (line.compare(0, 7, "BACK") != 0) return false;
-					//std::cout << line <<  " 1" << endl;
-	getline(fin, line);
-	sstream.str(line);
-	sstream >> tileSizeBack >> blockSizeBack;
-					//std::cout << line << " 2 " << tileSizeBack  << " " << blockSizeBack << endl;
-	getline(fin, line);
-	sstream.str(line);
-	sstream >> tilesheetFile; //Tilesheet -> image.png
-	tilesheetBack.loadFromFile(tilesheetFile, TEXTURE_PIXEL_FORMAT_RGBA);
-	tilesheetBack.setWrapS(GL_CLAMP_TO_EDGE);
-	tilesheetBack.setWrapT(GL_CLAMP_TO_EDGE);
-	tilesheetBack.setMinFilter(GL_NEAREST);
-	tilesheetBack.setMagFilter(GL_NEAREST);
-					//std::cout << line << " 3"  <<  endl;
-	getline(fin, line);
-
-	sstream.str(line);
-	sstream >> tilesheetBackSize.x >> tilesheetBackSize.y;
-					//std::cout << line << " 4 " << tilesheetBackSize.x << " " << tilesheetBackSize.y << endl;
-	tilesheetBackSize = glm::vec2(1.f, 1.f);
-	tileTexSizeBack = glm::vec2(1.f / 1.f, 1.f / 1.f);
-
-	backmap = new int[mapSize.x * mapSize.y];
-
-	for (int j = 0; j < mapSize.y; j++)
-	{
-		for (int i = 0; i < mapSize.x; i++)
-		{
-			fin.get(tile);
-			if(tile == '0' ) backmap[j*mapSize.x+i] = 0;
-			else backmap[j * mapSize.x + i] = tile - int('0');
-		}
-		fin.get(tile);
-#ifndef _WIN32
-		fin.get(tile);
-#endif
-	}
+	
 
 	fin.close();
 	
@@ -143,19 +115,17 @@ bool TileMap::loadLevel(const string& levelFile)
 
 void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 {
-	int tile, backtile;
-	glm::vec2 posTile, texCoordTile[2], halfTexel, halfTexelback;
+	int tile;
+	glm::vec2 posTile, texCoordTile[2], halfTexel;
 	vector<float> vertices;
 	
 	nTiles = 0;
 	halfTexel = glm::vec2(0.5f / tilesheet.width(), 0.5f / tilesheet.height());
-	halfTexelback = glm::vec2(0.5f / tilesheetBack.width(), 0.5f / tilesheetBack.height());
 	for(int j=0; j<mapSize.y; j++)
 	{
 		for(int i=0; i<mapSize.x; i++)
 		{
 			tile = map[j * mapSize.x + i];
-			backtile = backmap[j * mapSize.x + i];
 			if(tile != 0)
 			{
 				// Non-empty tile
@@ -178,30 +148,6 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 				vertices.push_back(posTile.x + blockSize); vertices.push_back(posTile.y + blockSize);
 				vertices.push_back(texCoordTile[1].x); vertices.push_back(texCoordTile[1].y);
 				vertices.push_back(posTile.x); vertices.push_back(posTile.y + blockSize);
-				vertices.push_back(texCoordTile[0].x); vertices.push_back(texCoordTile[1].y);
-			}
-			if (backtile != 0)
-			{
-				// Non-empty tile
-				//nTiles++;
-				posTile = glm::vec2(minCoords.x + i * tileSizeBack, minCoords.y + j * tileSizeBack);
-				texCoordTile[0] = glm::vec2(float((backtile - 1) % tilesheetBackSize.x) / tilesheetBackSize.x, float((backtile - 1) / tilesheetBackSize.x) / tilesheetBackSize.y);
-				texCoordTile[1] = texCoordTile[0] + tileTexSizeBack;
-				//texCoordTile[0] += halfTexel;
-				texCoordTile[1] -= halfTexelback;
-				// First triangle
-				vertices.push_back(posTile.x); vertices.push_back(posTile.y);
-				vertices.push_back(texCoordTile[0].x); vertices.push_back(texCoordTile[0].y);
-				vertices.push_back(posTile.x + blockSizeBack); vertices.push_back(posTile.y);
-				vertices.push_back(texCoordTile[1].x); vertices.push_back(texCoordTile[0].y);
-				vertices.push_back(posTile.x + blockSizeBack); vertices.push_back(posTile.y + blockSizeBack);
-				vertices.push_back(texCoordTile[1].x); vertices.push_back(texCoordTile[1].y);
-				// Second triangle
-				vertices.push_back(posTile.x); vertices.push_back(posTile.y);
-				vertices.push_back(texCoordTile[0].x); vertices.push_back(texCoordTile[0].y);
-				vertices.push_back(posTile.x + blockSizeBack); vertices.push_back(posTile.y + blockSizeBack);
-				vertices.push_back(texCoordTile[1].x); vertices.push_back(texCoordTile[1].y);
-				vertices.push_back(posTile.x); vertices.push_back(posTile.y + blockSizeBack);
 				vertices.push_back(texCoordTile[0].x); vertices.push_back(texCoordTile[1].y);
 			}
 		}

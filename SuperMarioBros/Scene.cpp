@@ -19,7 +19,7 @@ Scene::Scene()
 {
 	scroll = 0;
 	map = NULL;
-	background = NULL;
+	backmap = NULL;
 	player = NULL;
 	goomba = NULL;
 	koopatroopa = NULL;
@@ -28,6 +28,8 @@ Scene::Scene()
 
 Scene::~Scene()
 {
+	if (backmap != NULL)
+		delete backmap;
 	if(map != NULL)
 		delete map;
 	if(player != NULL)
@@ -38,8 +40,7 @@ Scene::~Scene()
 		delete koopatroopa;
 	if (menu != NULL)
 		delete menu;
-	if (background != NULL) 
-	delete background;
+
 }
 
 
@@ -56,7 +57,8 @@ void Scene::init(const int &lv)
 	else {
 		initShaders();
 		scroll = 0;
-		map = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram);
+		map = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram, false);
+		backmap = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram, true);
 		//background = TileMap::get
 		player = new Player();
 		player->init(glm::ivec2(0, 0), texProgram);
@@ -85,7 +87,7 @@ void Scene::update(int deltaTime)
 			camera->CameraUpdate(scroll);
 			player->setMinPos(scroll);
 		}
-		if (player->getandset()) { //el jugador ha muerto
+		if (player->getMariostate() == 4) { //el jugador ha muerto
 			scroll = 0;
 			player->init(glm::ivec2(0, 0), texProgram);
 			player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
@@ -143,6 +145,7 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 
 	if (level != 0) {
+		backmap->render();
 		map->render();
 		player->render();
 		goomba->render();
@@ -190,8 +193,14 @@ void Scene::changeScene(int sceneID) {
 	level = sceneID;
 	scroll = 0;
 	initShaders();
-	if (sceneID == 1) map = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram);
-	else if (sceneID == 2) map = TileMap::createTileMap("levels/level02.txt", glm::vec2(0, 0), texProgram);
+	if (sceneID == 1) {
+		map = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram, false);
+		backmap = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram, true);
+	}
+	else if (sceneID == 2) {
+		map = TileMap::createTileMap("levels/level02.txt", glm::vec2(0, 0), texProgram, false);
+		backmap = TileMap::createTileMap("levels/level02.txt", glm::vec2(0, 0), texProgram, true);
+	}
 	player = new Player();
 	player->init(glm::ivec2(0, 0), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
@@ -199,6 +208,7 @@ void Scene::changeScene(int sceneID) {
 
 	projection = glm::ortho(0.f, 300.f, 225.f, 0.f); //300 225
 
+	backmap->render();
 	map->render();
 	player->render();
 	currentTime = 0.0f;
