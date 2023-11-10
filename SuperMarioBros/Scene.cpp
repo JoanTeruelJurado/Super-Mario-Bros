@@ -75,7 +75,7 @@ void Scene::init(const int &lv)
 		koopatroopa->init(glm::ivec2(0, 0), texProgram);
 		koopatroopa->setPosition(glm::vec2(15 * map->getTileSize(), 12 * map->getTileSize() - 8));
 		koopatroopa->setTileMap(map);
-		//projection = glm::ortho(0.f, float(SCREEN_WIDTH ), float(SCREEN_HEIGHT), 0.f);
+
 		projection = glm::ortho(0.f, 300.f, 225.f, 0.f); // 300 225
 		currentTime = 0.0f;
 	}

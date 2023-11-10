@@ -29,7 +29,7 @@ enum PlayerAnims
 
 enum TypePlayer
 {
-	Small_Mario, Star_Mario, Fire_Mario, Medium_Mario, Dieing
+	Small_Mario, Star_Mario, Fire_Mario, Medium_Mario, Dieing, Flag
 };
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
@@ -43,7 +43,6 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	tileMapDispl = tileMapPos;
 
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-	
 }
 
 void Player::ChangeType(int statePlayer){
@@ -112,10 +111,10 @@ void Player::ChangeType(int statePlayer){
 		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(8 * 0.0625f, 1.f));
 
 		sprite->setAnimationSpeed(SLIDE_LEFT, 8);
-		sprite->addKeyframe(SLIDE_LEFT, glm::vec2(2 * 0.0625f, 1.f));
+		sprite->addKeyframe(SLIDE_LEFT, glm::vec2(11 * 0.0625f, 1.f));
 
 		sprite->setAnimationSpeed(SLIDE_RIGHT, 8);
-		sprite->addKeyframe(SLIDE_RIGHT, glm::vec2(11 * 0.0625f, 1.f));
+		sprite->addKeyframe(SLIDE_RIGHT, glm::vec2(2 * 0.0625f, 1.f));
 
 		sprite->setAnimationSpeed(JUMP_LEFT, 8);
 		sprite->addKeyframe(JUMP_LEFT, glm::vec2(1 * 0.0625f, 1.f));
@@ -155,10 +154,10 @@ void Player::ChangeType(int statePlayer){
 		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(8 * 0.0625f, 0.25f));
 
 		sprite->setAnimationSpeed(SLIDE_LEFT, 8);
-		sprite->addKeyframe(SLIDE_LEFT, glm::vec2(2 * 0.0625f, 0.25f));
+		sprite->addKeyframe(SLIDE_LEFT, glm::vec2(11 * 0.0625f, 0.25f));
 
 		sprite->setAnimationSpeed(SLIDE_RIGHT, 8);
-		sprite->addKeyframe(SLIDE_RIGHT, glm::vec2(11 * 0.0625f, 0.25f));
+		sprite->addKeyframe(SLIDE_RIGHT, glm::vec2(2 * 0.0625f, 0.25f));
 
 		sprite->setAnimationSpeed(JUMP_LEFT, 8);
 		sprite->addKeyframe(JUMP_LEFT, glm::vec2(1 * 0.0625f, 0.25f));
@@ -222,16 +221,16 @@ void Player::ChangeType(int statePlayer){
 		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(8 * 0.0625f, 4 * 0.25f));
 
 		sprite->setAnimationSpeed(SLIDE_LEFT, 32);
-		sprite->addKeyframe(SLIDE_LEFT, glm::vec2(2 * 0.0625f, 0.25f));
-		sprite->addKeyframe(SLIDE_LEFT, glm::vec2(2 * 0.0625f,2* 0.25f));
-		sprite->addKeyframe(SLIDE_LEFT, glm::vec2(2 * 0.0625f,3* 0.25f));
-		sprite->addKeyframe(SLIDE_LEFT, glm::vec2(2 * 0.0625f,4* 0.25f));
+		sprite->addKeyframe(SLIDE_LEFT, glm::vec2(11 * 0.0625f, 0.25f));
+		sprite->addKeyframe(SLIDE_LEFT, glm::vec2(11 * 0.0625f,2* 0.25f));
+		sprite->addKeyframe(SLIDE_LEFT, glm::vec2(11 * 0.0625f,3* 0.25f));
+		sprite->addKeyframe(SLIDE_LEFT, glm::vec2(11 * 0.0625f,4* 0.25f));
 
 		sprite->setAnimationSpeed(SLIDE_RIGHT, 32);
-		sprite->addKeyframe(SLIDE_RIGHT, glm::vec2(11 * 0.0625f, 0.25f));
-		sprite->addKeyframe(SLIDE_RIGHT, glm::vec2(11 * 0.0625f,2* 0.25f));
-		sprite->addKeyframe(SLIDE_RIGHT, glm::vec2(11 * 0.0625f,3* 0.25f));
-		sprite->addKeyframe(SLIDE_RIGHT, glm::vec2(11 * 0.0625f,4* 0.25f));
+		sprite->addKeyframe(SLIDE_RIGHT, glm::vec2(2 * 0.0625f, 0.25f));
+		sprite->addKeyframe(SLIDE_RIGHT, glm::vec2(2 * 0.0625f,2* 0.25f));
+		sprite->addKeyframe(SLIDE_RIGHT, glm::vec2(2 * 0.0625f,3* 0.25f));
+		sprite->addKeyframe(SLIDE_RIGHT, glm::vec2(2 * 0.0625f,4* 0.25f));
 
 		sprite->setAnimationSpeed(JUMP_LEFT, 32);
 		sprite->addKeyframe(JUMP_LEFT, glm::vec2(1 * 0.0625f, 0.25f));
@@ -263,34 +262,20 @@ void Player::ChangeType(int statePlayer){
 
 void Player::update(int deltaTime)
 {
+	glm::vec2 CPosPlayer = posPlayer;
 	time -= deltaTime/2.f;
 
+	/*int Dirs = 0;
+	Dirs |= (Game::instance().getSpecialKey(GLUT_KEY_UP));
+	Dirs |= (Game::instance().getSpecialKey(GLUT_KEY_DOWN)<<1);
+	Dirs |= (Game::instance().getSpecialKey(GLUT_KEY_LEFT)<<2);
+	Dirs |= (Game::instance().getSpecialKey(GLUT_KEY_RIGHT)<<3);*/
+
 	if (posPlayer.y >= 208 && sprite->animation() != DEATH) {
-		jumpAngle = 0;
-		if (Mariostate == Small_Mario) {
-			Mariostate = Dieing;
-			bJumping = true;
-			sprite->changeAnimation(DEATH);
-			PlaySound(L"sounds/smb_mariodie.wav", NULL, SND_ASYNC);
-			death_anim();
-			return;
-		}
-		else {
-			Sleep(1000);
-			ChangeType(Small_Mario);
-			Mariostate = Dieing;
-			sprite->changeAnimation(DEATH);
-			bJumping = true;
-			death_anim();
-			return;
-		}
-	}
-	if (sprite->animation() == DEATH) { death_anim(); return; }
-	/*if (posPlayer.y >= 208 && Mariostate != Dieing) {
-		//pre_death();
+		pre_death();
 		return;
 	}
-	if (Mariostate == Dieing) { death_anim(); return; };*/
+	if (sprite->animation() == DEATH) { death_anim(); return; }
 
 	float MaxSpeed = max_speed;
 	if (Game::instance().getSpecialKey(113) || Game::instance().getSpecialKey(112)) MaxSpeed = max_speed_running;
@@ -300,20 +285,7 @@ void Player::update(int deltaTime)
 	
 	if ( ((sprite->animation() != DOWN_LEFT) || (sprite->animation() != DOWN_RIGHT)) && (Mariostate != Small_Mario)) { mario_size = glm::ivec2(16, 32); }
 
-	if (((velPlayer.x) > 0) && !(map->collisionMoveUp(posPlayer, mario_size, Mariostate))) {
-		if (map->collisionMoveRight(posPlayer, mario_size)) {
-			velPlayer.x = 0;
-			posPlayer.x -= (posPlayer.x % 16);
-		}
-	}
-	else if (((velPlayer.x) < 0) && !(map->collisionMoveUp(posPlayer, mario_size, Mariostate))) {
-		if (map->collisionMoveLeft(posPlayer, mario_size)) {
-			velPlayer.x = 0;
-			posPlayer.x += 16-(posPlayer.x % 16);
-		}
-	}
 
-	
 	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 	{
 		Looking_left = true;
@@ -324,10 +296,9 @@ void Player::update(int deltaTime)
 		velPlayer.x = max(velPlayer.x-acceleration, -MaxSpeed);
 		if(map->collisionMoveLeft(posPlayer, mario_size) && !bJumping)
 		{
-			posPlayer.x += 16-(posPlayer.x % 16);
-			velPlayer.x = 0;
 			sprite->changeAnimation(STAND_LEFT);
 		}
+		
 	}
 	else if(Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
 	{
@@ -338,10 +309,9 @@ void Player::update(int deltaTime)
 		velPlayer.x = min(velPlayer.x + acceleration, MaxSpeed);
 		if(map->collisionMoveRight(posPlayer, mario_size) && !bJumping)
 		{
-			posPlayer.x -= (posPlayer.x % 16);
-			velPlayer.x = 0;
 			sprite->changeAnimation(STAND_RIGHT);
 		}
+
 	}
 	else if((Game::instance().getSpecialKey(GLUT_KEY_DOWN)) && Mariostate != Small_Mario) {
 		posPlayer.y -= 4;
@@ -383,7 +353,8 @@ void Player::update(int deltaTime)
 				if (jumpAngle > 90) { 
 					bJumping = !map->collisionMoveDown(posPlayer, mario_size, &posPlayer.y);
 				}
-				else if (map->collisionMoveUp(posPlayer, mario_size, Mariostate)) { jumpAngle = 90 + abs(90 - jumpAngle); } // to touch	
+				else if (map->collisionMoveUp(posPlayer, mario_size, Mariostate, &posPlayer.y)) { jumpAngle = 90 + abs(90 - jumpAngle); } // to touch	
+
 			}
 		
 	}
@@ -407,11 +378,46 @@ void Player::update(int deltaTime)
 		}
 		
 	}
-	posPlayer.x += velPlayer.x;
-	posPlayer.x = max(posPlayer.x, MinPos);
+	SolveCollisions(0);
+
+	//map->collisionTo(CPosPlayer, posPlayer, mario_size, Mariostate);
+
 	sprite->update(deltaTime);
 	sprite->setPosition(glm::vec2(float(posPlayer.x), float(posPlayer.y)));
 
+}
+
+void  Player::SolveCollisions(int Dirs) {
+
+	//std::cout << "POS: " << posPlayer.x << " " << posPlayer.y << endl;
+	//std::cout << "VEL: " << velPlayer.x << " " << velPlayer.y << endl;
+
+	if (velPlayer.y > 0) {
+		if (map->collisionMoveUp(posPlayer, mario_size, Mariostate, &posPlayer.y)) {
+			velPlayer.y = 0;
+		}
+	}
+	else if (velPlayer.y < 0) {
+		if (map->collisionMoveDown(posPlayer, mario_size, &posPlayer.y)) {
+			velPlayer.y = 0;
+		}
+	}
+	
+	if (velPlayer.x > 0) {
+		if (map->collisionMoveRight(posPlayer, mario_size, &posPlayer.x)) {
+			velPlayer.x = 0;
+		}
+	}
+	else if (velPlayer.x < 0) {
+		if (map->collisionMoveLeft(posPlayer, mario_size, &posPlayer.x)) {
+			velPlayer.x = 0;
+		}
+	}
+	//std::cout << posPlayer.x << " " << posPlayer.y << " " << velPlayer.y << endl;
+	posPlayer.x += velPlayer.x;
+	posPlayer.x = max(posPlayer.x, MinPos);
+	posPlayer.y += velPlayer.y;
+	//std::cout << "out. " << posPlayer.x << " "<< posPlayer.y << " " << velPlayer.y << endl;
 }
 
 glm::ivec2 Player::getPos() {
@@ -449,7 +455,6 @@ void Player::setDeath()
 void Player::pre_death() {
 	jumpAngle = 0;
 	if (Mariostate == Small_Mario) {
-		Mariostate = Dieing;
 		bJumping = true;
 		sprite->changeAnimation(DEATH);
 		PlaySound(L"sounds/smb_mariodie.wav", NULL, SND_ASYNC);
@@ -459,7 +464,6 @@ void Player::pre_death() {
 	else {
 		Sleep(1000);
 		ChangeType(Small_Mario);
-		Mariostate = Dieing;
 		sprite->changeAnimation(DEATH);
 		bJumping = true;
 		death_anim();
@@ -476,6 +480,7 @@ void Player::death_anim(){
 			Sleep(1500);
 			bJumping = false;
 			lives--;
+			Mariostate = Dieing;
 		}
 		else
 		{
@@ -520,3 +525,24 @@ void Player::setlives(int a) {
 void Player::setscore(int a) {
 	score = a;
 }
+
+/*switch (Dirs) {
+case 0x0: //none IDLE
+	break;
+case 0x1: //JUMP
+	break;
+case 0x9: //JUMP & RIGHT
+	Looking_left = false;
+	break;
+case 0x5: //JUMP & LEFT
+	Looking_left = true;
+	break;
+case 0x2: //DOWN
+	break;
+case 0x4: //LEFT
+	Looking_left = true;
+	break;
+case 0x8: //RIGHT
+	Looking_left = false;
+	break;
+}*/

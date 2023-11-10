@@ -53,8 +53,8 @@ private:
 
 	void death_anim();
 	void pre_death();
-	void CalculateVelocity();
-	void SettleCollisions();
+	//void CalculateVelocity();
+	void SolveCollisions(int Dirs);
 
 	int MinPos;
 	
