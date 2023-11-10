@@ -248,7 +248,11 @@ bool Scene::isKill(glm::vec2 posPlayer, glm::vec2 posEnemy, bool kill) {
 	float topE = posEnemy.y - 16;
 
 	if ((bottomP - 2 >= topE && bottomP <= topE + 2) && (leftP < rightE && rightP > leftE)) return true;
-	else if (!kill && (bottomP > topE) && (leftP < rightE && rightP > leftE)) player->setDeath();
+	else if (!kill && (bottomP > topE) && (leftP < rightE && rightP > leftE)) {
+		if (player->getMariostate() == 1) return true;
+		else if (player->getMariostate() != 0) player->ChangeType(0);
+		else player->setDeath();
+	}
 	return false;
 }
 
