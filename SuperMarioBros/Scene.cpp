@@ -57,8 +57,8 @@ void Scene::init(const int &lv)
 	else {
 		initShaders();
 		scroll = 0;
-		map = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram, false);
-		backmap = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram, true);
+		map = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram);
+		backmap = TileMap::createTileMap("levels/level01_background.txt", glm::vec2(0, 0), texProgram);
 		scoreBoard.loadFromFile("images/scoreboard.png", TEXTURE_PIXEL_FORMAT_RGBA);
 		scoreboard = Sprite::createSprite(glm::ivec2(300, 20), glm::vec2(1.0, 1.0), &scoreBoard, &texProgram);
 		scoreboard->setPosition(glm::vec2(0, 0));
@@ -200,12 +200,12 @@ void Scene::changeScene(int sceneID) {
 	scroll = 0;
 	initShaders();
 	if (sceneID == 1) {
-		map = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram, false);
-		backmap = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram, true);
+		map = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram);
+		backmap = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram);
 	}
 	else if (sceneID == 2) {
-		map = TileMap::createTileMap("levels/level02.txt", glm::vec2(0, 0), texProgram, false);
-		backmap = TileMap::createTileMap("levels/level02.txt", glm::vec2(0, 0), texProgram, true);
+		map = TileMap::createTileMap("levels/level02.txt", glm::vec2(0, 0), texProgram);
+		backmap = TileMap::createTileMap("levels/level02.txt", glm::vec2(0, 0), texProgram);
 	}
 	player = new Player();
 	player->init(glm::ivec2(0, 0), texProgram);
