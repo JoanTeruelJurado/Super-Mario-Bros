@@ -4,6 +4,8 @@
 #include "Scene.h"
 #include "Game.h"
 
+//#include <irrKlang.h>
+
 #include <windows.h>
 #include <mmsystem.h>
 
@@ -120,6 +122,14 @@ void Scene::update(int deltaTime)
 			camera->CameraUpdate(0);
 			player->setMinPos(0);
 			scoreboard->setPosition(glm::vec2(scroll, 0));
+		}
+		if (player->getMariostate() == 6) { //el jugador ha ganado
+			level = 2;
+			scroll = 0;
+			player->init(glm::ivec2(0, 0), texProgram);
+			player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+			camera->CameraUpdate(0);
+			player->setMinPos(0);
 		}
 	}
 

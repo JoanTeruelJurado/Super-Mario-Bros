@@ -35,9 +35,6 @@ public:
 	float gettime();
 	int getMariostate();
 
-	enum TypePlayer {
-		Small_Mario, Star_Mario, Fire_Mario, Medium_Mario, Dieing
-	};
 private:
 	bool bJumping;
 	glm::ivec2 tileMapDispl = glm::ivec2(0,0), posPlayer;
@@ -48,13 +45,13 @@ private:
 	TileMap *map;
 	glm::ivec2 mario_size = glm::ivec2(16, 16);
 	bool Looking_left = 0;
-	int Mariostate = Small_Mario;
+	int Mariostate = 0;
 	ShaderProgram shader;
 
 	void death_anim();
 	void pre_death();
-	//void CalculateVelocity();
-	void SolveCollisions(int Dirs);
+	void flag_pole_anim();
+	void SolveCollisions();
 
 	int MinPos;
 	

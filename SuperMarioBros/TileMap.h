@@ -32,19 +32,24 @@ public:
 	int getTileSize() const { return tileSize; }
 
 	bool collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) const;
-	bool collisionMoveLeft( glm::ivec2& pos, const glm::ivec2& size, int* posy) const;
+	bool collisionMoveLeft( glm::ivec2& pos, const glm::ivec2& size, int* posy);
 	bool collisionMoveRight( const glm::ivec2& pos, const glm::ivec2& size) const;
-	bool collisionMoveRight( glm::ivec2& pos, const glm::ivec2& size,int* posy) const;
+	bool collisionMoveRight( glm::ivec2& pos, const glm::ivec2& size,int* posy);
 	bool collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const;
 	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, const int Mariostate, int* posy);
 	bool collisionTo(const glm::ivec2& Cpos, const glm::ivec2& Npos, const glm::ivec2& size, const int Mariostate);
 
-
+	bool WinCondition();
+	glm::vec2 getWinPos();
+	
 private:
 	bool loadLevel(const string& levelFile);
 	void prepareArrays(const glm::vec2& minCoords, ShaderProgram& program);
 
 private:
+	bool won = false;
+	glm::ivec2 winPos;
+
 	GLuint vao;
 	GLuint vbo;
 	GLint posLocation, texCoordLocation;
