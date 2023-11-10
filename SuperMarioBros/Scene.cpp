@@ -114,7 +114,6 @@ void Scene::init(const int &lv)
 
 void Scene::update(int deltaTime)
 {
-	std::cout << level << endl;
 
 	if (level == 0) {
 		level = menu->update(deltaTime);
