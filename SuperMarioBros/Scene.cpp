@@ -57,8 +57,14 @@ void Scene::init(const int &lv)
 	else {
 		initShaders();
 		scroll = 0;
-		map = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram, false);
-		backmap = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram, true);
+		if (level == 1) {
+			map = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram, false);
+			backmap = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram, true);
+		}
+		else {
+			map = TileMap::createTileMap("levels/level02.txt", glm::vec2(0, 0), texProgram, false);
+			backmap = TileMap::createTileMap("levels/level02.txt", glm::vec2(0, 0), texProgram, true);
+		}
 
 		player = new Player();
 		player->init(glm::ivec2(0, 0), texProgram);
