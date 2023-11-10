@@ -25,7 +25,6 @@ void Game::render()
 using namespace std;
 void Game::keyPressed(int key)
 {
-	//std::cout << key << endl;
 	if (key == 49) scene.changeScene(1); // '1' key
 	if (key == 50) scene.changeScene(2); // '2' key
 	if (key == 112 || key==80) { scene.paused = !(scene.paused);} // P key
@@ -43,7 +42,6 @@ void Game::keyReleased(int key)
 
 void Game::specialKeyPressed(int key)
 {
-	//std::cout << key << endl;
 	specialKeys[key] = true;
 }
 

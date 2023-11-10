@@ -59,7 +59,7 @@ void Scene::init(const int &lv)
 		scroll = 0;
 		map = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram, false);
 		backmap = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram, true);
-		//background = TileMap::get
+
 		player = new Player();
 		player->init(glm::ivec2(0, 0), texProgram);
 		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
@@ -72,7 +72,7 @@ void Scene::init(const int &lv)
 		koopatroopa->init(glm::ivec2(0, 0), texProgram);
 		koopatroopa->setPosition(glm::vec2(15 * map->getTileSize(), 12 * map->getTileSize() - 8));
 		koopatroopa->setTileMap(map);
-		//projection = glm::ortho(0.f, float(SCREEN_WIDTH ), float(SCREEN_HEIGHT), 0.f);
+
 		projection = glm::ortho(0.f, 300.f, 225.f, 0.f); // 300 225
 		currentTime = 0.0f;
 	}

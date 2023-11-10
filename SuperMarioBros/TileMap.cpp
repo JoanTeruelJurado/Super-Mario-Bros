@@ -166,39 +166,85 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 // Method collisionMoveDown also corrects Y coordinate if the box is
 // already intersecting a tile below.
 
-bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const
+bool TileMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) const
 {
 	int x, y0, y1;
-	
+
 	x = pos.x / tileSize;
 	y0 = pos.y / tileSize;
 	y1 = (pos.y + size.y - 1) / tileSize;
+	for (int y = y0; y <= y1; y++)
+	{
+		if (map[y * mapSize.x + x] != 0)
+			return true;
+	}
+
+	return false;
+}
+
+bool TileMap::collisionMoveLeft(glm::ivec2 &pos, const glm::ivec2 &size, int* posx) const //AUTO CORRECTS POSITIONS
+{
+	int x, y0, y1;
+	int BLOCKID;
+
+	x = (pos.x + size.x - 1) / tileSize;
+	std::cout << pos.y << " " << 16 - (pos.y % 16) << endl;
+	if (map[(((pos.y - size.y) / tileSize) + 1) * mapSize.x + x - 1]) pos.y = (pos.y % 16 == 0) ? pos.y : pos.y + 16 - (pos.y % 16);
+
+	y0 = ((pos.y - size.y) / tileSize) + 1;
+	y1 = (pos.y + size.y - 1) / tileSize;
+
+
 	for(int y=y0; y<=y1; y++)
 	{
-		if(map[y*mapSize.x+x] != 0)
+		BLOCKID = map[y * mapSize.x + x-1];
+		if(BLOCKID != 0) {
+			*posx = x*tileSize;
 			return true;
+		}
 	}
 	
 	return false;
 }
 
-bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const
+bool TileMap::collisionMoveRight(glm::ivec2 &pos, const glm::ivec2 &size, int* posx) const //AUTO CORRECTS POSITIONS
 {
 	int x, y0, y1;
-	
+	int BLOCKID;
 	x = (pos.x + size.x -1 ) / tileSize;
-	y0 = (pos.y-1) / tileSize;
+
+	if (map[(((pos.y - size.y) / tileSize) + 1) * mapSize.x + x]) pos.y = (pos.y % 16 == 0) ? pos.y : pos.y+16- (pos.y % 16);
+
+	y0 = ((pos.y - size.y) / tileSize)+1;
 	y1 = (pos.y + size.y -1) / tileSize;
 
-	cout << pos.x << " " << pos.y << " // " << x << " " << y0 << " " << y1 << endl;
-
-	for(int y=y0; y<=y1; y++)
+	for(int y=y0; y <=y1; y++)
 	{
-		//if()
-		if(map[y*mapSize.x+x] != 0)
+		
+		BLOCKID = map[y * mapSize.x + x];
+		if(BLOCKID != 0) {
+			*posx -= (*posx % 16);
 			return true;
+		}
 	}
 	
+	return false;
+}
+
+bool TileMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size) const
+{
+	int x, y0, y1;
+
+	x = (pos.x + size.x - 1) / tileSize;
+	y0 = (pos.y - 1) / tileSize;
+	y1 = (pos.y + size.y - 1) / tileSize;
+
+	for (int y = y0; y <= y1; y++)
+	{
+		if (map[y * mapSize.x + x] != 0)
+			return true;
+	}
+
 	return false;
 }
 
@@ -207,20 +253,21 @@ enum TypePlayer
 	Small_Mario, Star_Mario, Fire_Mario, Medium_Mario
 };
 
-bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, const int Mariostate) const
+bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, const int Mariostate, int *posY)
 {
 	int x0, x1, y;
 
 	x0 = pos.x / tileSize;
 	x1 = (pos.x + size.x - 1) / tileSize;	
-	y = (pos.y - 1) / tileSize;
+	y = (pos.y -1) / tileSize;
 	int blockID = 0;
 	for (int x = x0; x <= x1; x++)
 	{
 		blockID = map[y * mapSize.x + x];
+
 		if (blockID != 0)
 		{
-			if (Mariostate != Small_Mario) {
+			if (Mariostate != Small_Mario && blockID != 2) {
 				map[y * mapSize.x + x] = 0;
 			}
 			return true;
@@ -252,34 +299,93 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 	
 	return false;
 }
+bool TileMap::collisionTo(const glm::ivec2& Cpos, const glm::ivec2& Npos, const glm::ivec2& size, const int Mariostate) {
+	if (Cpos == Npos) return false; //no se mueve
+	
+	int Diffx = (Cpos.x <= Npos.x) ? 1 : -1;
+	int Diffy = (Cpos.y <= Npos.y) ? 1 : -1;
 
+	int Xor, Yor, Xds, Yds;
+	Xor = Cpos.x / tileSize;
+	Yor = Cpos.y / tileSize;
 
+	Xds = (Npos.x) / tileSize;
+	Yds = (Npos.y) / tileSize;
+	std::cout << "DIRECTION " << Diffx << " " << Diffy << endl;
+	std::cout << "POS fl: " << Cpos.x << " " << Cpos.y << " -//- " << Npos.x << " " << Npos.y << endl;
+	std::cout << "POS ID: " << Xor << " " << Yor << " // " << Xds << " " << Yds << endl;
 
+	vector<glm::vec2> Physical_blocks (0);
 
+	glm::ivec2 MaxNextPos = glm::vec2(0, 0);
+	for (int X = Xor; X != Xds; X+=Diffx) {
+		for (int Y = Yor; Y != Yds; Y += Diffy) {
+			cout <<  "coords: " << X << " " << Y << endl;
 
+			if (map[Y * mapSize.x + X] != 0) {
+				Physical_blocks.push_back(glm::vec2(X,Y));
+				std::cout << "COLLISION on: " << X << " " << Y << endl;
+			}
+			
+		}
+	}
+	//if (Physical_blocks.empty()) return false;
+	//else return Intersect(Physical_blocks);
+	return false;
+}
 
+bool TileMap::Intersect(const glm::ivec2& myPos, const glm::ivec2& myDst, const vector<glm::vec2>& BlocksToCheck, const glm::ivec2& size) {
+	/*
+	glm::ivec2 a,b,c,d; //origen
+	glm::ivec2 A,B,C,D; //destino
 
+	Z3	Z---Z Z4	C->	X---X <-D
+block->	|XXX|			|   |		destino
+	Z1	Z---Z Z2	A->	X---X <-B
 
+	c->	X---X <-d
+		|   |		origen
+	a->	X---X <-b
 
+	Los bloques Z no dependen del tamaño del mario
 
+	Para saber si otros cuadrados intersecan las lineas a->A, b->B... debemos:
+		1) generar a,b,c,d i A,B,C,D
+		2) para cada bloque que debemos comprovar -> generar las diagonales (Z1-Z4) i (Z2-Z3)
+		3) Comprovar si hay colisiones
+	*/
 
+	glm::ivec2 a, b, c, d; //origen
+	glm::ivec2 A, B, C, D; //destino
+	a = myPos;
+	A = myDst;
 
+	b = glm::vec2(myPos.x + size.x, myPos.y);
+	B = glm::vec2(myDst.x + size.x, myDst.y);
 
+	c = glm::vec2(myPos.x, myPos.y- size.y);
+	C = glm::vec2(myDst.x, myDst.y- size.y);
 
+	d = glm::vec2(myPos.x + size.x, myPos.y - size.y);
+	D = glm::vec2(myDst.x + size.x, myDst.y - size.y);
 
+	bool answer = false;
 
+	glm::ivec2 Z1, Z2, Z3, Z4, ID;
+	for (int i = 0; i < BlocksToCheck.size(); i++) {
+		ID = BlocksToCheck[i];
+		Z1 = glm::vec2(ID.x* tileSize, ID.y*tileSize);
+		Z2 = glm::vec2(ID.x * tileSize + tileSize, ID.y * tileSize);
+		Z3 = glm::vec2(ID.x * tileSize, ID.y * tileSize - tileSize);
+		Z4 = glm::vec2(ID.x * tileSize + tileSize, ID.y * tileSize - tileSize);
+		
+		answer |= (CCW(a, Z2, Z3) != CCW(A, Z2, Z3) && CCW(a, A, Z2) != CCW(a, A, Z3));
+		answer |= (CCW(a, Z1, Z4) != CCW(A, Z1, Z4) && CCW(a, A, Z1) != CCW(a, A, Z4));
+	}
 
+	return answer;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+bool TileMap::CCW(const glm::ivec2& A, const glm::ivec2& B, const glm::ivec2& C) {
+	return ((C.y - A.y) * (B.x - A.x) > (B.y - A.y) * (C.x - A.x));
+}
