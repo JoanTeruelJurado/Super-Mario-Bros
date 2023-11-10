@@ -3,6 +3,8 @@
 #include "Game.h"
 #include <iostream>
 
+//#include <irrKlang.h>
+
 void Game::init()
 {
 	bPlay = true;

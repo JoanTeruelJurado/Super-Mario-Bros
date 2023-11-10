@@ -191,7 +191,7 @@ bool TileMap::collisionMoveLeft(glm::ivec2 &pos, const glm::ivec2 &size, int* po
 	for(int y=y0; y<=y1; y++)
 	{
 		BLOCKID = map[y * mapSize.x + x-1];
-		if ((BLOCKID == 9 || BLOCKID == 10) && !won) {
+		if ((BLOCKID == 9 || BLOCKID == 10 || BLOCKID == 11 || BLOCKID == 12) && !won) {
 			winPos = glm::vec2(x, y1);
 			won = true;
 			std::cout << "VICTORY" << endl;
@@ -221,7 +221,7 @@ bool TileMap::collisionMoveRight(glm::ivec2 &pos, const glm::ivec2 &size, int* p
 	{
 		
 		BLOCKID = map[y * mapSize.x + x];
-		if ((BLOCKID == 9 || BLOCKID == 10) && !won) {
+		if ((BLOCKID == 9 || BLOCKID == 10 || BLOCKID == 11 || BLOCKID == 12) && !won) {
 			winPos = glm::vec2(x, y1);
 			won = true;
 			std::cout << "VICTORY" << endl;
@@ -277,11 +277,11 @@ bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, con
 				map[y * mapSize.x + x] = 0;
 			}
 			return true;
-			if (blockID == 9 || blockID == 10) { 
+			/*if (blockID == 9 || blockID == 10 || blockID == 11 || blockID == 12) {
 				winPos = glm::vec2(x0, y);
 				won = true;
 				std::cout << "VICTORY" << endl;
-			}
+			}*/
 		}
 	}
 

@@ -4,7 +4,7 @@
 #include "Scene.h"
 #include "Game.h"
 
-//#include <irrKlang.h>
+//#include "irrKlang.h"
 
 #include <windows.h>
 #include <mmsystem.h>
@@ -48,12 +48,14 @@ Scene::~Scene()
 
 void Scene::init(const int &lv)
 {
+
 	level = lv;
 	scroll = 0;
 	camera->CameraUpdate(0);
 	initShaders();
 	initNumbers();
 	if (level == 0) {
+		player = new Player();
 		menu = new Menu();
 		menu->init(texProgram);
 		projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
@@ -67,10 +69,11 @@ void Scene::init(const int &lv)
 		scoreBoard.loadFromFile("images/scoreboard.png", TEXTURE_PIXEL_FORMAT_RGBA);
 		scoreboard = Sprite::createSprite(glm::ivec2(300, 20), glm::vec2(1.0, 1.0), &scoreBoard, &texProgram);
 		scoreboard->setPosition(glm::vec2(0, 0));
-		player = new Player();
+		
 		player->init(glm::ivec2(0, 0), texProgram);
 		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 		player->setTileMap(map);
+		player->setlvl(1);
 		goomba = new Goomba();
 		goomba->init(glm::ivec2(0, 0), texProgram);
 		goomba->setPosition(glm::vec2(10 * map->getTileSize(), 12 * map->getTileSize()));
@@ -99,13 +102,23 @@ void Scene::init(const int &lv)
 		assignNumber(world, 1);
 		assignNumber(lvl, 2);
 
+		player->setlvl(2);
 		projection = glm::ortho(0.f, 300.f, 225.f, 0.f); // 300 225
 		currentTime = 0.0f;
+	}
+	else if (level == 3) {
+		menu->setState(55);
+		projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
+	}
+	else if (level == 4) {
+		menu->setState(44);
+		projection = glm::ortho(0.f, float(SCREEN_WIDTH)-40, float(SCREEN_HEIGHT), 0.f);
 	}
 }
 
 void Scene::update(int deltaTime)
 {
+
 	if (level == 0) {
 		level = menu->update(deltaTime);
 		if (level != 0) {
@@ -113,6 +126,15 @@ void Scene::update(int deltaTime)
 		}
 	}
 	else {
+		
+		
+
+		if (player->getlives() <= 0) {
+			
+			init(4);
+			player->setlives(3);
+			return;
+		}
 		int marioposx = player->getPos().x;
 		if (marioposx >= scroll + ortho_size /2) {
 			scroll += abs(marioposx - (scroll + ortho_size / 2));
@@ -132,17 +154,18 @@ void Scene::update(int deltaTime)
 			lives->setPosition(glm::vec2(scroll + 265, 10));
 		}
 		if (player->getMariostate() == 4) { //el jugador ha muerto
-			scroll = 0;
+			init(level);
 			player->init(glm::ivec2(0, 0), texProgram);
+			//player->setlives(lives - 1);
 			player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 			camera->CameraUpdate(0);
 			player->setMinPos(0);
 			scoreboard->setPosition(glm::vec2(scroll, 0));
 		}
 		if (player->getMariostate() == 6) { //el jugador ha ganado
-			level = 2;
-			scroll = 0;
+			init(level+1);
 			player->init(glm::ivec2(0, 0), texProgram);
+			//player->setlives(lives);
 			player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 			camera->CameraUpdate(0);
 			player->setMinPos(0);
@@ -240,7 +263,9 @@ void Scene::render()
 		unitTimer->render();
 		lives->render();
 	}
-	
+	else if (level == 3) {
+		menu->render();
+	}
 }
 
 void Scene::initShaders()
