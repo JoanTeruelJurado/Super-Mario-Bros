@@ -31,6 +31,7 @@ public:
 	int getcoins();
 	int getlives();
 	int getscore();
+	void setlvl(int a);
 	void setMinPos(int scroll);
 	float gettime();
 	int getMariostate();
@@ -58,6 +59,8 @@ private:
 	int coins  = 0;
 	int lives = 3;
 	int score = 0;
+
+	int lvl = 1;
 
 	float time = 30000.f;
 };

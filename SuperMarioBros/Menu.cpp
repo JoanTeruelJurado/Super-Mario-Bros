@@ -37,7 +37,8 @@ void Menu::init(ShaderProgram& shaderProgram) {
     credits_0.loadFromFile("images/credits.png", TEXTURE_PIXEL_FORMAT_RGBA);
     credits = Sprite::createSprite(glm::ivec2(640, 480), glm::vec2(1.0, 1.0), &credits_0, &shaderProgram);
 
-
+    gameover_0.loadFromFile("images/game_over.png", TEXTURE_PIXEL_FORMAT_RGBA);
+    gameover = Sprite::createSprite(glm::ivec2(640, 480), glm::vec2(1.0, 1.0), &gameover_0, &shaderProgram);
 
     menu1->setPosition(glm::vec2(float(0), float(0)));
     menu2->setPosition(glm::vec2(float(0), float(0)));
@@ -94,7 +95,8 @@ int Menu::update(int deltaTime) {
     }
     return 0;
 }
-//if (state == exit) { credits , Sleep(2000), exit(),}
+
+
 void Menu::render() {
     if (state == 0) {
         if (menu == 0) menu1->render();
@@ -110,7 +112,9 @@ void Menu::render() {
     else if (state == 2) {
         instructions->render();
     }
-    else if (state == 33) { credits->render(); exit(0); }
+    else if (state == 33) { exit(0); }
+    else if (state == 44) { gameover->render(); }
+    else if (state == 55) { credits->render(); }
 }
 
 void Menu::setState(int s) {

@@ -424,7 +424,7 @@ void  Player::SolveCollisions() {
 	posPlayer.x = max(posPlayer.x, MinPos);
 	posPlayer.y += velPlayer.y;
 
-	if (map->WinCondition()) {
+	if (map->WinCondition() && lvl == 1) {
 		Mariostate = Flag;
 		glm::vec2 Winpos = map->getWinPos();
 		setPosition(glm::vec2(Winpos.x * 16, Winpos.y * 16));
@@ -432,6 +432,9 @@ void  Player::SolveCollisions() {
 		Sleep(500);
 		sprite->changeAnimation(RIGHTPOLE);
 		Sleep(500);
+	}
+	if (map->WinCondition() && lvl == 2) {
+		Mariostate = Victory;
 	}
 }
 
@@ -469,6 +472,7 @@ void Player::setDeath()
 
 void Player::pre_death() {
 	jumpAngle = 0;
+	startY = posPlayer.y;
 	if (Mariostate == Small_Mario) {
 		bJumping = true;
 		sprite->changeAnimation(DEATH);
@@ -560,6 +564,7 @@ void Player::setscore(int a) {
 	score = a;
 }
 
+void Player::setlvl(int a) { lvl = a; }
 /*switch (Dirs) {
 case 0x0: //none IDLE
 	break;
