@@ -34,6 +34,12 @@ public:
 	int getScroll();
 private:
 	void initShaders();
+	void initNumbers();
+	void assignNumber(Sprite* s, int n);
+	void updateTimer();
+	void updateCoins();
+	void updatePoints();
+	void updateLives();
 
 private:
 	TileMap *map, *backmap;
@@ -46,8 +52,8 @@ private:
 	Menu  *menu;
 	int level, scroll;
 	Camera* camera;
-	Sprite* scoreboard;
-	Texture scoreBoard;
+	Sprite *scoreboard, *centenaPoints, *decenaPoints, *unitPoints, *decenaCoins, *unitCoins, *world, *lvl, * centenaTimer, * decenaTimer, * unitTimer, *lives;
+	Texture scoreBoard, numbers;
 };
 
 
