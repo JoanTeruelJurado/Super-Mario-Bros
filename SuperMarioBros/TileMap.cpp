@@ -8,16 +8,16 @@
 using namespace std;
 
 
-TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program, bool Back)
+TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
 {
-	TileMap *map = new TileMap(levelFile, minCoords, program, Back);
+	TileMap *map = new TileMap(levelFile, minCoords, program);
 	return map;
 }
 
 
-TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program, bool Back)
+TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
 {
-	loadLevel(levelFile, Back);
+	loadLevel(levelFile);
 	prepareArrays(minCoords, program);
 }
 
@@ -45,11 +45,8 @@ void TileMap::free()
 	glDeleteBuffers(1, &vbo);
 }
 
-bool TileMap::loadLevel(const string& levelFile, bool Back)
+bool TileMap::loadLevel(const string& levelFile)
 {
-	if (Back) std::cout << "READING BACKGROUND... " << endl;
-	else std::cout << "READING FOREGROUND... " << endl;
-
 	ifstream fin;
 	string line, tilesheetFile;
 	stringstream sstream;
@@ -59,10 +56,7 @@ bool TileMap::loadLevel(const string& levelFile, bool Back)
 	if (!fin.is_open())
 		return false;
 	getline(fin, line);
-	if (Back) {
-		while ((line.compare(0, 7, "BACK") != 0)) getline(fin, line);
-	}
-	else if (line.compare(0, 7, "TILEMAP") != 0) return false;
+	if (line.compare(0, 7, "TILEMAP") != 0) return false;
 	
 	getline(fin, line);
 	sstream.str(line);
