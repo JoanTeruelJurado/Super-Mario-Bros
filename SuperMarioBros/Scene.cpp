@@ -59,6 +59,9 @@ void Scene::init(const int &lv)
 		scroll = 0;
 		map = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram, false);
 		backmap = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram, true);
+		scoreBoard.loadFromFile("images/scoreboard.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		scoreboard = Sprite::createSprite(glm::ivec2(300, 20), glm::vec2(1.0, 1.0), &scoreBoard, &texProgram);
+		scoreboard->setPosition(glm::vec2(0, 0));
 		//background = TileMap::get
 		player = new Player();
 		player->init(glm::ivec2(0, 0), texProgram);
@@ -86,6 +89,7 @@ void Scene::update(int deltaTime)
 			scroll += abs(marioposx - (scroll + ortho_size / 2));
 			camera->CameraUpdate(scroll);
 			player->setMinPos(scroll);
+			scoreboard->setPosition(glm::vec2(scroll, 0));
 		}
 		if (player->getMariostate() == 4) { //el jugador ha muerto
 			scroll = 0;
@@ -93,6 +97,7 @@ void Scene::update(int deltaTime)
 			player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 			camera->CameraUpdate(0);
 			player->setMinPos(0);
+			scoreboard->setPosition(glm::vec2(scroll, 0));
 		}
 	}
 
@@ -150,6 +155,7 @@ void Scene::render()
 		player->render();
 		goomba->render();
 		koopatroopa->render();
+		scoreboard->render();
 	}
 	else {
 		menu->render();
@@ -211,6 +217,7 @@ void Scene::changeScene(int sceneID) {
 	backmap->render();
 	map->render();
 	player->render();
+	scoreboard->render();
 	currentTime = 0.0f;
 	return;
 }

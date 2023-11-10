@@ -46,6 +46,8 @@ private:
 	Menu  *menu;
 	int level, scroll;
 	Camera* camera;
+	Sprite* scoreboard;
+	Texture scoreBoard;
 };
 
 
