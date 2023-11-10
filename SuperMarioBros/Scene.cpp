@@ -4,6 +4,8 @@
 #include "Scene.h"
 #include "Game.h"
 
+//#include <irrKlang.h>
+
 #include <windows.h>
 #include <mmsystem.h>
 
@@ -47,24 +49,19 @@ Scene::~Scene()
 void Scene::init(const int &lv)
 {
 	level = lv;
-	if (level == 0) {
+	if (level == 0) { //menu
 		initShaders();
 		menu = new Menu();
 		menu->init(texProgram);
 		projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 		PlaySound(L"sounds/01.-Ground-Theme.wav", NULL, SND_ASYNC|SND_LOOP);
 	}
-	else {
+	else if (level == 1) { //level1
 		initShaders();
 		scroll = 0;
-		if (level == 1) {
-			map = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram, false);
-			backmap = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram, true);
-		}
-		else {
-			map = TileMap::createTileMap("levels/level02.txt", glm::vec2(0, 0), texProgram, false);
-			backmap = TileMap::createTileMap("levels/level02.txt", glm::vec2(0, 0), texProgram, true);
-		}
+		map = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram, false);
+		backmap = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram, true);
+
 
 		player = new Player();
 		player->init(glm::ivec2(0, 0), texProgram);
@@ -82,6 +79,29 @@ void Scene::init(const int &lv)
 		projection = glm::ortho(0.f, 300.f, 225.f, 0.f); // 300 225
 		currentTime = 0.0f;
 	}
+	else if (level == 2) { //level2
+		initShaders();
+		scroll = 0;
+		map = TileMap::createTileMap("levels/level02.txt", glm::vec2(0, 0), texProgram, false);
+		backmap = TileMap::createTileMap("levels/level02.txt", glm::vec2(0, 0), texProgram, true);
+
+		player = new Player();
+		player->init(glm::ivec2(0, 0), texProgram);
+		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		player->setTileMap(map);
+		goomba = new Goomba();
+		goomba->init(glm::ivec2(0, 0), texProgram);
+		goomba->setPosition(glm::vec2(10 * map->getTileSize(), 12 * map->getTileSize()));
+		goomba->setTileMap(map);
+		koopatroopa = new KoopaTroopa();
+		koopatroopa->init(glm::ivec2(0, 0), texProgram);
+		koopatroopa->setPosition(glm::vec2(15 * map->getTileSize(), 12 * map->getTileSize() - 8));
+		koopatroopa->setTileMap(map);
+
+		projection = glm::ortho(0.f, 300.f, 225.f, 0.f); // 300 225
+		currentTime = 0.0f;
+	}
+	
 }
 
 void Scene::update(int deltaTime)
@@ -94,6 +114,14 @@ void Scene::update(int deltaTime)
 			player->setMinPos(scroll);
 		}
 		if (player->getMariostate() == 4) { //el jugador ha muerto
+			scroll = 0;
+			player->init(glm::ivec2(0, 0), texProgram);
+			player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+			camera->CameraUpdate(0);
+			player->setMinPos(0);
+		}
+		if (player->getMariostate() == 6) { //el jugador ha ganado
+			level = 2;
 			scroll = 0;
 			player->init(glm::ivec2(0, 0), texProgram);
 			player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));

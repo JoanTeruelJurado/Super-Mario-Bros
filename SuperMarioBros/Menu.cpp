@@ -80,7 +80,7 @@ int Menu::update(int deltaTime) {
         changedRecently = true;
     }
     else if (!changedRecently && Game::instance().getKey('b')) {
-        if (state == 0) state == 33;
+        if (state == 0) state = 33;
         else state = 0;
         menu = 0;
         timerChangemenuion = 0;
@@ -88,7 +88,7 @@ int Menu::update(int deltaTime) {
     }
     return 0;
 }
-
+//if (state == exit) { credits , Sleep(2000), exit(),}
 void Menu::render() {
     if (state == 0) {
         if (menu == 0) menu1->render();
