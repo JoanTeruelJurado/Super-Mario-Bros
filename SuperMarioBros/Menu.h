@@ -10,9 +10,9 @@ public:
     Menu();
     ~Menu();
 
-    Sprite* menu1, * menu2, * menu3, * levels1, * levels2, * levels3, * instructions;
+    Sprite* menu1, * menu2, * menu3, * levels1, * levels2, * levels3, * instructions, *loadScreen;
     TileMap* map;
-    Texture menu_1, menu_2, menu_3, levels_1, levels_2, levels_3, instructions_0;
+    Texture menu_1, menu_2, menu_3, levels_1, levels_2, levels_3, instructions_0, loadScreen_0;
     int menu, state;
     bool changedRecently;
     float timerChangemenuion;

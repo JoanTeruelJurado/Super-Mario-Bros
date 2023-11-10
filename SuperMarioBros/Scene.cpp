@@ -54,7 +54,7 @@ void Scene::init(const int &lv)
 		projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 		PlaySound(L"sounds/01.-Ground-Theme.wav", NULL, SND_ASYNC|SND_LOOP);
 	}
-	else {
+	else if (level == 1) {
 		initShaders();
 		scroll = 0;
 		map = TileMap::createTileMap("levels/level01.txt", glm::vec2(0, 0), texProgram);
@@ -62,7 +62,7 @@ void Scene::init(const int &lv)
 		scoreBoard.loadFromFile("images/scoreboard.png", TEXTURE_PIXEL_FORMAT_RGBA);
 		scoreboard = Sprite::createSprite(glm::ivec2(300, 20), glm::vec2(1.0, 1.0), &scoreBoard, &texProgram);
 		scoreboard->setPosition(glm::vec2(0, 0));
-		//background = TileMap::get
+
 		player = new Player();
 		player->init(glm::ivec2(0, 0), texProgram);
 		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
@@ -76,6 +76,20 @@ void Scene::init(const int &lv)
 		koopatroopa->setPosition(glm::vec2(15 * map->getTileSize(), 12 * map->getTileSize() - 8));
 		koopatroopa->setTileMap(map);
 
+		projection = glm::ortho(0.f, 300.f, 225.f, 0.f); // 300 225
+		currentTime = 0.0f;
+	}
+
+	else {
+		map = TileMap::createTileMap("levels/level02.txt", glm::vec2(0, 0), texProgram);
+		backmap = TileMap::createTileMap("levels/level02.txt", glm::vec2(0, 0), texProgram);
+		scoreBoard.loadFromFile("images/scoreboard.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		scoreboard = Sprite::createSprite(glm::ivec2(300, 20), glm::vec2(1.0, 1.0), &scoreBoard, &texProgram);
+		scoreboard->setPosition(glm::vec2(0, 0));
+		player = new Player();
+		player->init(glm::ivec2(0, 0), texProgram);
+		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		player->setTileMap(map);
 		projection = glm::ortho(0.f, 300.f, 225.f, 0.f); // 300 225
 		currentTime = 0.0f;
 	}

@@ -29,8 +29,10 @@ void Menu::init(ShaderProgram& shaderProgram) {
     levels2 = Sprite::createSprite(glm::ivec2(640, 480), glm::vec2(1.0, 1.0), &levels_2, &shaderProgram);
     levels_3.loadFromFile("images/levels_menu_3.png", TEXTURE_PIXEL_FORMAT_RGBA);
     levels3 = Sprite::createSprite(glm::ivec2(640, 480), glm::vec2(1.0, 1.0), &levels_3, &shaderProgram);
-    instructions_0.loadFromFile("images/base_menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
+    instructions_0.loadFromFile("images/instruccions.png", TEXTURE_PIXEL_FORMAT_RGBA);
     instructions = Sprite::createSprite(glm::ivec2(640, 480), glm::vec2(1.0, 1.0), &instructions_0, &shaderProgram);
+    loadScreen_0.loadFromFile("images/LoadScreen.png", TEXTURE_PIXEL_FORMAT_RGBA);
+    loadScreen = Sprite::createSprite(glm::ivec2(640, 480), glm::vec2(1.0, 1.0), &loadScreen_0, &shaderProgram);
 
     menu1->setPosition(glm::vec2(float(0), float(0)));
     menu2->setPosition(glm::vec2(float(0), float(0)));
@@ -39,6 +41,7 @@ void Menu::init(ShaderProgram& shaderProgram) {
     levels2->setPosition(glm::vec2(float(0), float(0)));
     levels3->setPosition(glm::vec2(float(0), float(0)));
     instructions->setPosition(glm::vec2(float(0), float(0)));
+    loadScreen->setPosition(glm::vec2(float(0), float(0)));
 }
 
 int Menu::update(int deltaTime) {
