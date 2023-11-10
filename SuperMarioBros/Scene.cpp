@@ -4,7 +4,7 @@
 #include "Scene.h"
 #include "Game.h"
 
-//#include <irrKlang.h>
+//#include "irrKlang.h"
 
 #include <windows.h>
 #include <mmsystem.h>
@@ -97,6 +97,9 @@ void Scene::init(const int &lv)
 		projection = glm::ortho(0.f, 300.f, 225.f, 0.f); // 300 225
 		currentTime = 0.0f;
 	}
+	if (level == 3) {
+		
+	}
 }
 
 void Scene::update(int deltaTime)
@@ -108,6 +111,8 @@ void Scene::update(int deltaTime)
 		}
 	}
 	else {
+		std::cout << player->getMariostate() << endl;
+
 		int marioposx = player->getPos().x;
 		if (marioposx >= scroll + ortho_size /2) {
 			scroll += abs(marioposx - (scroll + ortho_size / 2));
@@ -116,6 +121,7 @@ void Scene::update(int deltaTime)
 			scoreboard->setPosition(glm::vec2(scroll, 0));
 		}
 		if (player->getMariostate() == 4) { //el jugador ha muerto
+			//if (player->getlives()<= 0) //gameOVER
 			scroll = 0;
 			player->init(glm::ivec2(0, 0), texProgram);
 			player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
@@ -124,8 +130,7 @@ void Scene::update(int deltaTime)
 			scoreboard->setPosition(glm::vec2(scroll, 0));
 		}
 		if (player->getMariostate() == 6) { //el jugador ha ganado
-			level = 2;
-			scroll = 0;
+			init(level+1);
 			player->init(glm::ivec2(0, 0), texProgram);
 			player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 			camera->CameraUpdate(0);
